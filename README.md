@@ -21,7 +21,7 @@ You can add to **your** header files after to add new functionality but try not 
 
 If you want a feature create an issue, someone whose job is most close to the requested feature or whose code it involved will assign themselves or get assigned to it by the project manager.
 
-Large additions that affect the whole project should be added using a pull request so others can have a look, otherwise simply merge using the command line or whatever other tool floats you boat, for more info click [here](http://gitref.org/branching/).
+Large additions that affect the whole project should be added using a pull request so others can have a look, otherwise simply merge using the command line or whatever other tool floats your boat, for more info click [here](http://gitref.org/branching/).
 
 ## Jobs & Responsibilities
 
