@@ -28,8 +28,13 @@
 *.app
 
 # CMake generated files
-CMakeCache.txt
+/CMakeCache.txt
 /build/
+
+# Eclipse folders and files
+/.settings/
+/.cproject
+/.project
 
 # =========================
 # Operating System Files
@@ -77,10 +82,3 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-# Elcipse folders and files
-# =========================
-
-\.settings
-.cproject
-.project
