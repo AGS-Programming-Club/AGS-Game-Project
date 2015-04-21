@@ -73,3 +73,10 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Elcipse folders and files
+# =========================
+
+\.settings
+.cproject
+.project
