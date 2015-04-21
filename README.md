@@ -25,10 +25,12 @@ If you want a feature create an issue, someone whose job is most close to the re
 Name | Jobs
 -----|------
 James | Renderer
-Mitchell | UI
+Mitchell | User Interface Design
 Andrew | General Logic
-BH | Project Manager
-sharma| Graphics and sever
+Byung Hoon | Project Manager
+Ashutosh | Graphics and Sever
+Kevin | Gameplay and Graphics
+Hogan | Quality Assurance
 
 Add these people to the assignee of the issue if you think they would be best suited. Else leave it blank and someone will
 assign themselves if they have time.
