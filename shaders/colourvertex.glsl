@@ -3,9 +3,9 @@
 layout(location = 0) in vec2 position;
 layout(location = 1) in vec4 colour;
 
-layout(location = 0) out vec4 out_colour;
+out vec4 f_colour;
 
 void main() {
-	out_colour = colour;
+	f_colour = colour;
 	gl_Position = vec4(position, 0, 1);
 }
