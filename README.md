@@ -17,10 +17,11 @@ If you need help for the dependencies just ask.
 
 The main branch should be kept in a working state. This means that all commits should be made to a separate branch
 and committed later. The branch should only be merged when at least the header files and basic functionality is done.
-You can add to **your** header files after to add new functionality but try not to remove or change methods without consulting
-people who may be using them.
+You can add to **your** header files after to add new functionality but try not to remove or change methods without consulting people who may be using them.
 
-If you want a feature create an issue, someone whose job is most close to the requested feature or whose code it involved.
+If you want a feature create an issue, someone whose job is most close to the requested feature or whose code it involved will assign themselves or get assigned to it by the project manager.
+
+Large additions that affect the whole project should be added using a pull request so others can have a look, otherwise simply merge using the command line or whatever other tool floats you boat, for more info click [here](http://gitref.org/branching/).
 
 ## Jobs & Responsibilities
 
