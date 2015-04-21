@@ -1,0 +1,3 @@
+#define AGS-Game-Project_VERSION_MAJOR @AGS-Game-Project_VERSION_MAJOR@
+#define AGS-Game-Project_VERSION_MINOR @AGS-Game-Project_VERSION_MINOR@
+#define AGS-Game-Project_VERSION_PATCH @AGS-Game-Project_VERSION_PATCH@
