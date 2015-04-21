@@ -1,5 +1,7 @@
 # AGS Game Project
-This is the Game project for the AGS NZOI group
+This is the Game project for the AGS NZOI group.
+
+## Requirements
 
 This project uses:
 * glew
