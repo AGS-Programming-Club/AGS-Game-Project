@@ -27,6 +27,10 @@
 *.out
 *.app
 
+# CMake generated files
+CMakeCache.txt
+/build/
+
 # =========================
 # Operating System Files
 # =========================
