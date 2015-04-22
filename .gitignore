@@ -27,9 +27,17 @@
 *.out
 *.app
 
-# CMake generated files
-/CMakeCache.txt
+# Build folder
 /build/
+
+# CMake generated files
+CMakeFiles/
+Makefile
+cmake_install.cmake
+/bin/
+/CMakeCache.txt
+/config.h
+
 
 # Eclipse folders and files
 /.settings/
