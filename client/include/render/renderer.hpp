@@ -81,12 +81,18 @@ namespace text {
 		Data* next;
 
 		glm::vec2 pos;
+		glm::vec4 colour;
 		float size;
 		char* text;
+		int length;
 		int image;
 	};
 
-	Data* add(glm::vec2 pos, float size, char* text, int image);
+	/** adds a text job to the renderer, pos is the lower left corner, float is the size in display units,
+	*	image is the texture that the text is found in, a 16 x 16 bitmap font with the data stored in the
+	*	alpha stream.
+	*/
+	Data* add(glm::vec2 pos, glm::vec4 colour, float size, char* text, int length, int image);
 	void remove(Data* text);
 }
 

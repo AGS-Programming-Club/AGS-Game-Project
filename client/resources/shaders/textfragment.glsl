@@ -1,11 +1,13 @@
 #version 330 core
 
-layout(location = 0) in vec2 textureCoords;
+in vec2 f_textureCoords;
+in vec4 f_colour;
 
-layout(location = 0) uniform sampler2D image;
+uniform sampler2D image;
 
 out vec4 colour;
 
 void main() {
-	colour = texture(image, textureCoords);
+	colour = f_colour;
+	colour = texture(image, f_textureCoords);
 }
