@@ -3,11 +3,12 @@
 //GLFW used for keyboard IO and window creation
 #include <GLFW/glfw3.h>
 
-#include "../log.hpp"
 #include <string.h>
 #include <glm/glm.hpp>
-#include "renderer.hpp"
-#include "programLoader.hpp"
+
+#include "log.hpp"
+#include "render/renderer.hpp"
+#include "render/programLoader.hpp"
 
 using namespace std;
 using namespace glm;

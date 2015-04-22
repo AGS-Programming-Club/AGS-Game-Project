@@ -5,8 +5,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "../log.hpp"
-#include "renderer.hpp"
+#include "log.hpp"
+#include "render/renderer.hpp"
 
 using namespace std;
 
