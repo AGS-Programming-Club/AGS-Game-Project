@@ -41,3 +41,13 @@ assign themselves if they have time.
 ## Discussion
 
 We are using [Slack](https://agsprogramming.slack.com) for discussion but there is a meeting every Friday.
+
+## Building
+### Eclipse
+- Run `cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug .`  
+- Import the project in Eclipse  
+- Build  
+
+NOTE: You will have to change the project run working directory
+
+http://www.cmake.org/Wiki/Eclipse_CDT4_Generator
