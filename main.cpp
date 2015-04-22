@@ -12,11 +12,13 @@ using namespace glm;
 void innit() {
 	render::init(3, 3, 4, "AGS Programing Group", false);
 
-	GLuint image = image::loadBMP("uvtemplate");
+	GLuint image = image::loadBMP("courier");
 	texture::bind(image, 0);
 
-	texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
-	texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec2(0, 0), vec2(1, 1), vec2(0, 1), 0);
+	//texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
+	//texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec2(0, 0), vec2(1, 1), vec2(0, 1), 0);
+
+	text::add(vec2(0, 0), vec4(1, 1, 1, 1), 0.2, "ABCD", 4, 0);
 }
 
 void gameLoop() {

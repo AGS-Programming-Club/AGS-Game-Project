@@ -299,6 +299,194 @@ namespace texturedTriangle {
 	}
 }
 
+/** Holds methods used to render text */
+namespace text {
+	//for the technically inclined text is rendererd using instancing
+
+	/** whether the GPU buffer needs to be updated next frame */
+	bool update = false;
+
+	int DATA_SIZE_FLOAT = 8;
+
+	GLuint vao;
+	GLuint vbo;
+	GLuint staticVbo;
+	GLuint program = 0;
+
+	Data** start = new Data*[0]; //holds the start of each font array, if the array has 0 length
+	int* sizes = new int[0]; //holds the size of each line array in letters
+	int letters = 0;
+
+	//NB arrays need to be updated whenever the number of textures change
+	int numberOfTextures = 0; //the number of textures
+
+	Data* add(vec2 pos, vec4 colour, float size, char* text, int length, int image) {
+		if(image >= numberOfTextures) {
+			Data** tmpStart = new Data*[image + 1]();
+			std::copy(start, start + numberOfTextures, tmpStart);
+			delete [] start;
+			start = tmpStart;
+
+			int* tmpSizes = new int[image + 1]();
+			std::copy(sizes, sizes + numberOfTextures, tmpSizes);
+			delete [] sizes;
+			sizes = tmpSizes;
+
+			numberOfTextures = image + 1;
+		}
+
+		Data* d = new Data;
+		d->pos = pos;
+		d->colour = colour;
+		d->size = size;
+		d->text = text;
+		d->image = image;
+		d->length = length;
+
+		letters += length;
+
+		d->next = start[image];
+
+		if(start[image] == NULL)
+			d->previous = NULL;
+		else
+			d->previous = start[image]->previous;
+
+		if(start[image] != NULL)
+			start[image]->previous = d;
+
+		start[image] = d;
+
+		sizes[d->image] += d->length;
+
+		update = true;
+
+		return d;
+	}
+
+	void remove(Data* data) {
+		sizes[data->image] -= data->length;
+
+		letters -= data->length;
+
+		if(start[data->image] == data)
+			start[data->image] = (data->next == NULL || data->next->image == data->image) ? data->next : NULL;
+
+		if(data->next != NULL)
+			data->next->previous = data->previous;
+
+		if(data->previous != NULL)
+			data->previous->next = data->next;
+
+		delete data;
+
+		update = true;
+	}
+
+	const float vertexs[] = {
+			0, 0,
+			1, 0,
+			1, 1,
+
+			1, 1,
+			0, 1,
+			0, 0,
+	};
+
+	void init() {
+		glGenVertexArrays(1, &vao);
+		glGenBuffers(1, &vbo);
+		glGenBuffers(1, &staticVbo);
+		glBindVertexArray(vao);
+
+		glEnableVertexAttribArray(0); //used for position of vertexs
+
+		glEnableVertexAttribArray(1); //used for letter code
+		glEnableVertexAttribArray(2); //used for the position of the letter
+		glEnableVertexAttribArray(3); //used for colour
+		glEnableVertexAttribArray(4); //used for the size of the font
+
+		glBindBuffer(GL_ARRAY_BUFFER, staticVbo);
+		glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), vertexs, GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*) 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glVertexAttribIPointer(1, 1, GL_UNSIGNED_INT, 32, (void*) 0);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 32, (void*) 4);
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 32, (void*) (4 + 8));
+		glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, 32, (void*) (4 + 8 + 16));
+
+		glVertexAttribDivisor(1, 1);
+		glVertexAttribDivisor(2, 1);
+		glVertexAttribDivisor(3, 1);
+		glVertexAttribDivisor(4, 1);
+	}
+
+	void clean() {
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &staticVbo);
+		glDeleteVertexArrays(1, &vao);
+		glDeleteProgram(program);
+	}
+
+	int getCharCode(char c) {
+		return (int) c - 32;
+	}
+
+	void remakeBuffer() {
+		//TODO use mapped buffers
+		GLfloat data[letters * DATA_SIZE_FLOAT];
+
+		Data* current = NULL;
+
+		int i = 0;
+
+		if(numberOfTextures != 0) {
+			current = start[0];
+
+			while(current != NULL) {
+				for(int l = 0; l < current->length; l++) {
+					((int*) data)[i++] = getCharCode(current->text[l]);
+
+					data[i++] = current->pos.x + current->size * l; //this assumes unispace font
+					data[i++] = current->pos.y;
+
+					data[i++] = current->colour.r;
+					data[i++] = current->colour.g;
+					data[i++] = current->colour.b;
+					data[i++] = current->colour.a;
+
+					data[i++] = current->size;
+				}
+				current = current->next;
+			}
+		}
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+
+		update = false;
+	}
+
+	void draw() {
+		if(update)
+			remakeBuffer();
+
+		glBindVertexArray(vao);
+		glUseProgram(program);
+
+		int acc = 0;
+		for(int i = 0; i < numberOfTextures; i++) {
+			if(sizes[i] == 0)
+				continue;
+
+			glUniform1i(0, i);
+			glDrawArraysInstanced(GL_TRIANGLES, acc, 6, sizes[i]);
+			acc += sizes[i];
+		}
+	}
+}
+
 /** Holds methods used to render coloured lines */
 namespace line {
 	/** whether the GPU buffer needs to be updated next frame */
@@ -428,18 +616,22 @@ namespace render {
 	void createPrograms() {
 		GLuint colourVertex = shader::create(GL_VERTEX_SHADER, "colourvertex");
 		GLuint colourFragment = shader::create(GL_FRAGMENT_SHADER, "colourfragment");
+
 		GLuint textureFragment = shader::create(GL_FRAGMENT_SHADER, "texturefragment");
 		GLuint textureVertex = shader::create(GL_VERTEX_SHADER, "texturevertex");
 
-		CHECK_GL();
+		GLuint textVertex = shader::create(GL_VERTEX_SHADER, "textvertex");
+		GLuint textFragment = shader::create(GL_FRAGMENT_SHADER, "textfragment");
+
 		CHECK_GL();
 
 		GLuint colourArray [] = {colourVertex, colourFragment};
 		GLuint textureArray [] = {textureVertex, textureFragment};
+		GLuint textArray [] = {textVertex, textFragment};
 
 		line::program = program::create(colourArray);
 		solidTriangle::program = line::program;
-
+		text::program = program::create(textArray);
 		texturedTriangle::program = program::create(textureArray);
 
 		CHECK_GL();
@@ -493,6 +685,7 @@ namespace render {
 		line::init();
 		solidTriangle::init();
 		texturedTriangle::init();
+		text::init();
 	}
 
 	void draw();
@@ -532,6 +725,9 @@ namespace render {
 
 		if(texturedTriangle::size != 0)
 			texturedTriangle::draw();
+
+		if(text::letters != 0)
+			text::draw();
 	}
 }
 
