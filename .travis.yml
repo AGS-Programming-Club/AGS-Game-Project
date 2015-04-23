@@ -1,0 +1,5 @@
+language: c++
+compiler: gcc
+before_script: sudo apt-get install libgl1-mesa-dev libglew-dev libglfw-dev libglm-dev
+script: "mkdir build && cd build && cmake ../ && make"
+install: true
