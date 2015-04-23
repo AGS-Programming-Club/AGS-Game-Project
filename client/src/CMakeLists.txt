@@ -32,14 +32,8 @@ if (WIN32)
     foreach (INDEX RANGE 0 ${client_DLLS_BOUND})
         list (GET client_DLLS ${INDEX} SOURCE)
         get_filename_component (FILENAME ${SOURCE} NAME)
-
-        if (NOT "${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
-            # Out of source build
-            set (DESTINATION "${CMAKE_BINARY_DIR}/bin/client/${FILENAME}")
-        else (NOT "${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
-            # In source build
-            set (DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/${FILENAME}")
-        endif (NOT "${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+		
+        set (DESTINATION "${CMAKE_BINARY_DIR}/bin/client/${FILENAME}")
 
 		# FIXME Hack for custom command not working
 		configure_file (${SOURCE} ${DESTINATION} COPYONLY)
