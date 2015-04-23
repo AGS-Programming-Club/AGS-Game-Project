@@ -13,4 +13,9 @@ configure_file (
 )
 include_directories ("${PROJECT_BINARY_DIR}")
 
+find_package (OpenGL REQUIRED)
+find_package (GLEW REQUIRED)
+find_package (GLFW REQUIRED)
+find_package (GLM REQUIRED)
+
 add_subdirectory (client)
