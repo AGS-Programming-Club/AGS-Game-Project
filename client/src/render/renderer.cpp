@@ -685,6 +685,9 @@ namespace render {
 
 		CHECK_GL();
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		line::init();
 		solidTriangle::init();
 		texturedTriangle::init();
