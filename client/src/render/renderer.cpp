@@ -434,6 +434,8 @@ namespace text {
 		return (int) c - 32;
 	}
 
+	const float WIDTH_SCALE = 0.5;
+
 	void remakeBuffer() {
 		//TODO use mapped buffers
 		GLfloat data[letters * DATA_SIZE_FLOAT];
@@ -449,7 +451,7 @@ namespace text {
 				for(int l = 0; l < current->length; l++) {
 					((int*) data)[i++] = getCharCode(current->text[l]);
 
-					data[i++] = current->pos.x + current->size * l; //this assumes unispace font
+					data[i++] = current->pos.x + current->size * l * WIDTH_SCALE; //this assumes unispace font
 					data[i++] = current->pos.y;
 
 					data[i++] = current->colour.r;

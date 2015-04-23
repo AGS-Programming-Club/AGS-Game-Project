@@ -9,5 +9,5 @@ out vec4 colour;
 
 void main() {
 	colour = f_colour;
-	colour = texture(image, f_textureCoords);
+	colour = texture(image, f_textureCoords).rrrr;
 }
