@@ -321,7 +321,7 @@ namespace text {
 	//NB arrays need to be updated whenever the number of textures change
 	int numberOfTextures = 0; //the number of textures
 
-	Data* add(vec2 pos, vec4 colour, float size, char* text, int length, int image) {
+	Data* add(vec2 pos, vec4 colour, float size, string text, int image) {
 		if(image >= numberOfTextures) {
 			Data** tmpStart = new Data*[image + 1]();
 			std::copy(start, start + numberOfTextures, tmpStart);
@@ -340,11 +340,11 @@ namespace text {
 		d->pos = pos;
 		d->colour = colour;
 		d->size = size;
-		d->text = text;
+		d->text = text.c_str();
 		d->image = image;
-		d->length = length;
+		d->length = text.length();
 
-		letters += length;
+		letters += d->length;
 
 		d->next = start[image];
 

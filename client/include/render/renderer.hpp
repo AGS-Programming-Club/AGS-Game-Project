@@ -83,7 +83,7 @@ namespace text {
 		glm::vec2 pos;
 		glm::vec4 colour;
 		float size;
-		char* text;
+		const char* text;
 		int length;
 		int image;
 	};
@@ -92,7 +92,7 @@ namespace text {
 	*	image is the texture that the text is found in, a 16 x 16 bitmap font with the data stored in the
 	*	alpha stream.
 	*/
-	Data* add(glm::vec2 pos, glm::vec4 colour, float size, char* text, int length, int image);
+	Data* add(glm::vec2 pos, glm::vec4 colour, float size, std::string text, int image);
 	void remove(Data* text);
 }
 
