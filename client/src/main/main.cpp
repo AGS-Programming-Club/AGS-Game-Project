@@ -31,7 +31,7 @@ void innit() {
 	text::add(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "abcd TEXT text Texty text", 0);
 }
 
-namespace time {
+namespace fps {
 	double delta;
 	double lastFrame = glfwGetTime();
 }
@@ -39,8 +39,8 @@ namespace time {
 void gameLoop() {
 	do {
 		double time = glfwGetTime();
-		time::delta = time - time::lastFrame;
-		time::lastFrame = time;
+		fps::delta = time - fps::lastFrame;
+		fps::lastFrame = time;
 
 		render::tick();
 		keybinds::poll();
