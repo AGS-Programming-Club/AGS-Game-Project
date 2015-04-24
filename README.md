@@ -32,7 +32,7 @@ Name | Jobs
 -----|------
 James | Renderer & Box2D
 Mitchell | User Interface Design
-Andrew | General Logic
+Andrew | General Logic & Build Systems
 Byung Hoon | Project Manager
 Ashutosh | Graphics and Sever
 Kevin | Gameplay and Graphics
