@@ -1,4 +1,10 @@
 language: c++
 compiler: gcc
-before_script: sudo apt-get install libgl1-mesa-dev libglew-dev libglfw3-dev libglm-dev
-script: "mkdir build && cd build && cmake ../ && make"
+
+before_install:
+    - sudo apt-get-repository ppa:pyglfw/ppa
+    - sudo apt-get update
+install:
+    - sudo apt-get install libgl1-mesa-dev libglew-dev libglfw3-dev libglm-dev
+script:
+    - "mkdir build && cd build && cmake ../ && make"
