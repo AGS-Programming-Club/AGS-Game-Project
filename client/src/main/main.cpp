@@ -16,7 +16,8 @@ void test() {
 }
 
 void innit() {
-	render::init(3, 3, 4, "AGS Programing Group", false);
+	render::init(3, 3, 4, "AGS Programing Group", true);
+	glfwSwapInterval(1);
 	keybinds::init();
 
 	GLuint image = image::loadBMP("courier");
@@ -30,8 +31,17 @@ void innit() {
 	text::add(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "abcd TEXT text Texty text", 0);
 }
 
+namespace time {
+	double delta;
+	double lastFrame = glfwGetTime();
+}
+
 void gameLoop() {
 	do {
+		double time = glfwGetTime();
+		time::delta = time - time::lastFrame;
+		time::lastFrame = time;
+
 		render::tick();
 		keybinds::poll();
 
