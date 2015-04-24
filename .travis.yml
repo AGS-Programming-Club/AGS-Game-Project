@@ -2,9 +2,13 @@ language: c++
 compiler: gcc
 
 before_install:
-    - sudo add-apt-repository ppa:pyglfw/pyglfw -y
+    - sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa -y # For gcc
+    - sudo add-apt-repository ppa:pyglfw/pyglfw -y # For glfw
     - sudo apt-get update -y
 install:
-    - sudo apt-get install libgl1-mesa-dev libglew-dev libglfw3-dev libglm-dev -y
+    - sudo apt-get install g++-49 libgl1-mesa-dev libglew-dev libglfw3-dev libglm-dev -y
 script:
-    - "mkdir build && cd build && cmake ../ && make"
+    - mkdir build
+    - cd build
+    - cmake ../
+    - make"
