@@ -14,6 +14,9 @@
 #define CHECK_GL() render::checkGL("GL Error " + std::string(SFILE) + "." + LINE_STRING + ": ")
 
 namespace render {
+	glm::vec2 scale;
+	glm::vec2 position;
+
 	GLFWwindow* getWindow();
 	void init(int major, int minor, int samples, std::string title, bool fullscreen);
 	void tick();

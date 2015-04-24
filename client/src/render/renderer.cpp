@@ -603,6 +603,12 @@ namespace line {
 
 //holds rendering methods
 namespace render {
+	bool cameraChange = false;
+
+	void updateCamera() {
+		cameraChange = true;
+	}
+
 	bool checkGL(string message) {
 		GLenum err = glGetError();
 		if(err != GL_NO_ERROR) {
@@ -700,8 +706,28 @@ namespace render {
 
 	void draw();
 
+	void updateCamera_impl() {
+		glUseProgram(texturedTriangle::program);
+		glUniform2f(1, position.x, position.y);
+		glUniform2f(2, scale.x, scale.y);
+
+		glUseProgram(text::program);
+		glUniform2f(1, position.x, position.y);
+		glUniform2f(2, scale.x, scale.y);
+
+		glUseProgram(line::program);
+		glUniform2f(0, position.x, position.y);
+		glUniform2f(1, scale.x, scale.y);
+
+		cameraChange = false;
+	}
+
 	/* Swaps buffers and renders the queued shapes */
 	void tick() {
+		if(cameraChange) {
+			updateCamera_impl();
+		}
+
 		draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
