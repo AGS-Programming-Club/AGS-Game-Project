@@ -603,8 +603,6 @@ namespace line {
 
 //holds rendering methods
 namespace render {
-	GLFWwindow* window;
-
 	bool checkGL(string message) {
 		GLenum err = glGetError();
 		if(err != GL_NO_ERROR) {
@@ -638,6 +636,12 @@ namespace render {
 		texturedTriangle::program = program::create(textureArray);
 
 		CHECK_GL();
+	}
+
+	GLFWwindow* window;
+
+	GLFWwindow* getWindow() {
+		return window;
 	}
 
 	/* Creates a window with Opengl versions major.minor

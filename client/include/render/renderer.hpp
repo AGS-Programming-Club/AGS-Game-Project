@@ -2,6 +2,7 @@
 #define RENDERER_H
 
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <string>
 #include <cstring>
 #include <glm/glm.hpp>
@@ -13,6 +14,7 @@
 #define CHECK_GL() render::checkGL("GL Error " + std::string(SFILE) + "." + LINE_STRING + ": ")
 
 namespace render {
+	GLFWwindow* getWindow();
 	void init(int major, int minor, int samples, std::string title, bool fullscreen);
 	void tick();
 	bool shouldClose();
