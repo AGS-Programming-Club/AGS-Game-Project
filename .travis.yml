@@ -1,0 +1,10 @@
+language: c++
+compiler: gcc
+
+before_install:
+    - sudo add-apt-repository ppa:pyglfw/pyglfw -y
+    - sudo apt-get update -y
+install:
+    - sudo apt-get install libgl1-mesa-dev libglew-dev libglfw3-dev libglm-dev -y
+script:
+    - "mkdir build && cd build && cmake ../ && make"
