@@ -11,8 +11,21 @@
 using namespace std;
 using namespace glm;
 
-void test() {
-	log(INFO, "Keypress");
+void w() {
+	render::getCameraPos()->y -= 0.001;
+	render::updateCamera();
+}
+void a() {
+	render::getCameraPos()->x += 0.001;
+	render::updateCamera();
+}
+void s() {
+	render::getCameraPos()->y += 0.001;
+	render::updateCamera();
+}
+void d() {
+	render::getCameraPos()->x -= 0.001;
+	render::updateCamera();
 }
 
 void innit() {
@@ -23,7 +36,10 @@ void innit() {
 	GLuint image = image::loadBMP("courier");
 	texture::bind(image, 0);
 
-	keybinds::add(test, GLFW_KEY_A, KEY_RELEASED);
+	keybinds::add(w, GLFW_KEY_W, KEY_DOWN);
+	keybinds::add(a, GLFW_KEY_A, KEY_DOWN);
+	keybinds::add(s, GLFW_KEY_S, KEY_DOWN);
+	keybinds::add(d, GLFW_KEY_D, KEY_DOWN);
 
 	//texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
 	//texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec2(0, 0), vec2(1, 1), vec2(0, 1), 0);

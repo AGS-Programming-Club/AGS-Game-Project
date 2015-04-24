@@ -20,6 +20,9 @@ namespace render {
 	bool shouldClose();
 	void clean();
 	bool checkGL(std::string message);
+	void updateCamera();
+	glm::vec2* getCameraPos();
+	glm::vec2* getCameraScale();
 }
 
 namespace texture {
