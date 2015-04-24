@@ -30,7 +30,7 @@ Large additions that affect the whole project should be added using a pull reque
 
 Name | Jobs
 -----|------
-James | Renderer
+James | Renderer & Box2D
 Mitchell | User Interface Design
 Andrew | General Logic
 Byung Hoon | Project Manager
