@@ -2,7 +2,7 @@ language: c++
 compiler: gcc
 
 before_install:
-    - sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa -y # For gcc
+    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y # For gcc
     - sudo add-apt-repository ppa:pyglfw/pyglfw -y # For glfw
     - sudo apt-get update -y
 install:
