@@ -13,6 +13,28 @@
 using namespace std;
 using namespace glm;
 
+namespace render {
+	vec2 position = vec2(0, 0);
+	vec2 scale = vec2(1, 1);
+
+	GLuint colour_c_pos;
+	GLuint colour_c_scale;
+	GLuint text_c_pos;
+	GLuint text_c_scale;
+	GLuint text_sampler;
+	GLuint texture_c_pos;
+	GLuint texture_c_scale;
+	GLuint texture_sampler;
+
+	vec2* getCameraPos() {
+		return &position;
+	}
+
+	vec2* getCameraScale() {
+		return &scale;
+	}
+}
+
 //All data is considered persistant and is kept in a single buffer per render type, dynamic data will be added latter
 
 /** Holds methods used to render solid triangles */
@@ -293,7 +315,7 @@ namespace texturedTriangle {
 			if(sizes[i] == 0)
 				continue;
 
-			glUniform1i(0, i);
+			glUniform1i(render::texture_sampler, i);
 			glDrawArrays(GL_TRIANGLES, acc, sizes[i] * 3);
 			acc += sizes[i];
 		}
@@ -483,7 +505,7 @@ namespace text {
 			if(sizes[i] == 0)
 				continue;
 
-			glUniform1i(0, i);
+			glUniform1i(render::text_sampler, i);
 			glDrawArraysInstanced(GL_TRIANGLES, acc, 6, sizes[i]);
 			acc += sizes[i];
 		}
@@ -603,7 +625,7 @@ namespace line {
 
 //holds rendering methods
 namespace render {
-	bool cameraChange = false;
+	bool cameraChange = true;
 
 	void updateCamera() {
 		cameraChange = true;
@@ -640,6 +662,17 @@ namespace render {
 		solidTriangle::program = line::program;
 		text::program = program::create(textArray);
 		texturedTriangle::program = program::create(textureArray);
+
+		render::colour_c_pos = glGetUniformLocation(line::program, "c_pos");
+		render::colour_c_scale = glGetUniformLocation(line::program, "c_scale");
+
+		render::text_c_pos = glGetUniformLocation(text::program, "c_pos");
+		render::text_c_scale = glGetUniformLocation(text::program, "c_scale");
+		render::text_sampler = glGetUniformLocation(text::program, "image");
+
+		render::texture_c_pos = glGetUniformLocation(texturedTriangle::program, "c_pos");
+		render::texture_c_scale = glGetUniformLocation(texturedTriangle::program, "c_scale");
+		render::texture_sampler = glGetUniformLocation(texturedTriangle::program, "image");
 
 		CHECK_GL();
 	}
@@ -708,16 +741,16 @@ namespace render {
 
 	void updateCamera_impl() {
 		glUseProgram(texturedTriangle::program);
-		glUniform2f(1, position.x, position.y);
-		glUniform2f(2, scale.x, scale.y);
+		glUniform2f(render::texture_c_pos, position.x, position.y);
+		glUniform2f(render::texture_c_scale, scale.x, scale.y);
 
 		glUseProgram(text::program);
-		glUniform2f(1, position.x, position.y);
-		glUniform2f(2, scale.x, scale.y);
+		glUniform2f(render::text_c_pos, position.x, position.y);
+		glUniform2f(render::text_c_scale, scale.x, scale.y);
 
 		glUseProgram(line::program);
-		glUniform2f(0, position.x, position.y);
-		glUniform2f(1, scale.x, scale.y);
+		glUniform2f(render::colour_c_pos, position.x, position.y);
+		glUniform2f(render::colour_c_scale, scale.x, scale.y);
 
 		cameraChange = false;
 	}
