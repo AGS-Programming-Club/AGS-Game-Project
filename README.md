@@ -13,6 +13,9 @@ This project uses:
 These will be needed to develop this project, they can be found using Google.
 If you need help for the dependencies just ask.
 
+## Box2D
+Read the manual: http://box2d.org/manual.pdf
+
 ## Contributing
 
 The main branch should be kept in a working state. This means that all commits should be made to a separate branch
