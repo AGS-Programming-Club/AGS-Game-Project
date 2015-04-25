@@ -50,13 +50,24 @@ We are using [Slack](https://agsprogramming.slack.com) for discussion but there 
 ### Normally
 
 #### Unix
-- Run `./scripts/build.sh`
-- To run, run `./scripts/run.sh`
+- Run `./scripts/build.sh`  
+- To run, run `./scripts/run.sh`  
+
+#### MinGW
+NOTE: You need TDM-GCC-64  
+- Run `scripts\build_mingw.bat`  
+- To run, run `scripts\run.sh`  
 
 ### Eclipse
 
 #### Unix
 
 - Run `./scripts/eclipse.sh`  
+- Import the generated project in Eclipse  
+- Run 'client'  
+
+#### MinGW
+
+- Run `scripts\eclipse_mingw.bat`  
 - Import the generated project in Eclipse  
 - Run 'client'  
