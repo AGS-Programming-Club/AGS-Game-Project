@@ -25,13 +25,13 @@ install:
     - cd liquidfun/Box2D
     - mkdir build
     - cd build
-    - cmake ..                        \
-          -DBOX2D_INSTALL=ON          \
-          -DBOX2D_INSTALL_DOC=OFF     \
-          -DBOX2D_BUILD_SHARED=ON     \
-          -DBOX2D_BUILD_STATIC=OFF    \
-          -DBOX2D_BUILD_EXAMPLES=OFF  \
-          -DBOX2D_BUILD_UNITTESTS=OFF \
+    - cmake ..
+          -DBOX2D_INSTALL=ON
+          -DBOX2D_INSTALL_DOC=OFF
+          -DBOX2D_BUILD_SHARED=ON
+          -DBOX2D_BUILD_STATIC=OFF
+          -DBOX2D_BUILD_EXAMPLES=OFF
+          -DBOX2D_BUILD_UNITTESTS=OFF
           -DCMAKE_INSTALL_PREFIX=/usr
     - make
     - sudo make install
