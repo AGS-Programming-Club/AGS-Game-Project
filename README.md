@@ -46,11 +46,17 @@ assign themselves if they have time.
 We are using [Slack](https://agsprogramming.slack.com) for discussion but there is a meeting every Friday.
 
 ## Building
+
+### Normally
+
+#### Unix
+- Run `./scripts/build.sh`
+- To run, run `./scripts/run.sh`
+
 ### Eclipse
-- Run `cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug .`  
-- Import the project in Eclipse  
-- Build  
 
-NOTE: You will have to change the project run working directory
+#### Unix
 
-http://www.cmake.org/Wiki/Eclipse_CDT4_Generator
+- Run `./scripts/eclipse.sh`  
+- Import the generated project in Eclipse  
+- Run 'client'  
