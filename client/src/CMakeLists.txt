@@ -25,21 +25,23 @@ include_directories ("${GLM_INCLUDE_DIRS}")
 include_directories ("${FREEIMAGE_INCLUDE_DIR}")
 target_link_libraries (client ${FREEIMAGE_LIBRARIES})
 
+include_directories ("${LIQUIDFUN_INCLUDE_DIR}")
+target_link_libraries (client ${LIQUIDFUN_LIBRARIES})
 
 
 if (WIN32)
-    set (client_DLLS ${GLEW_LIBRARIES} ${GLFW_LIBRARIES})
+    set (client_DLLS ${GLEW_LIBRARIES} ${GLFW_LIBRARIES} ${FREEIMAGE_LIBRARIES} ${LIQUIDFUN_LIBRARIES})
     list (LENGTH client_DLLS client_DLLS_COUNT)
     math (EXPR client_DLLS_BOUND "${client_DLLS_COUNT} - 1")
 
     foreach (INDEX RANGE 0 ${client_DLLS_BOUND})
         list (GET client_DLLS ${INDEX} SOURCE)
         get_filename_component (FILENAME ${SOURCE} NAME)
-		
+
         set (DESTINATION "${CMAKE_BINARY_DIR}/bin/client/${FILENAME}")
 
-		# FIXME Hack for custom command not working
-		configure_file (${SOURCE} ${DESTINATION} COPYONLY)
+        # FIXME Hack for custom command not working
+        configure_file (${SOURCE} ${DESTINATION} COPYONLY)
 
         #add_custom_command (
         #    OUTPUT "${DESTINATION}"

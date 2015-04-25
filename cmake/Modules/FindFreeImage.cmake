@@ -42,7 +42,7 @@ set (FREEIMAGE_INCLUDE_DIRS ${FREEIMAGE_INCLUDE_DIR})
 set (FREEIMAGE_LIBRARIES ${FREEIMAGE_LIBRARY})
 
 include ("${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake")
-find_package_handle_standard_args (FREEIMAGE
+find_package_handle_standard_args (FreeImage
                                    REQUIRED_VARS FREEIMAGE_INCLUDE_DIR FREEIMAGE_LIBRARY)
 
 mark_as_advanced(FREEIMAGE_INCLUDE_DIR FREEIMAGE_LIBRARY)
