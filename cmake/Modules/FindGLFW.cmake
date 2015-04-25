@@ -30,8 +30,6 @@ if (WIN32)
     endif (MINGW)
 endif (WIN32)
 
-message (${GLFW_LIBRARY_SEARCH_DIRS})
-
 find_path (GLFW_INCLUDE_DIR
     NAMES GLFW/glfw3.h
     HINTS ${GLFW_INCLUDE_SEARCH_DIRS})
