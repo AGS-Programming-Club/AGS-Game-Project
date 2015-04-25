@@ -29,7 +29,7 @@ void d() {
 }
 
 void innit() {
-	render::init(3, 3, 4, "AGS Programing Group", true);
+	render::init(3, 3, 4, "AGS Programing Group", false);
 	glfwSwapInterval(1);
 	keybinds::init();
 
@@ -41,10 +41,12 @@ void innit() {
 	keybinds::add(s, GLFW_KEY_S, KEY_DOWN);
 	keybinds::add(d, GLFW_KEY_D, KEY_DOWN);
 
-	//texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
-	//texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec2(0, 0), vec2(1, 1), vec2(0, 1), 0);
+	texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
+	solidTriangle::add(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec4(0.5, 1, 0.5, 1));
 
 	text::add(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "abcd TEXT text Texty text", 0);
+
+	line::add(vec2(-0.5, 0), vec2(0.5, 0), vec4(1, 0.5, 0.5, 1));
 }
 
 namespace fps {
