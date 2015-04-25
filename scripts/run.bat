@@ -6,3 +6,5 @@ pushd "%SCRIPT_PATH%\.."
 cd build\bin\client
 client
 popd
+
+pause

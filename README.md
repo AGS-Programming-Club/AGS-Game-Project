@@ -55,8 +55,8 @@ We are using [Slack](https://agsprogramming.slack.com) for discussion but there 
 
 #### MinGW
 NOTE: You need TDM-GCC-64  
-- Run `scripts\build_mingw.bat`  
-- To run, run `scripts\run.sh`  
+- Run `scripts\build_mingw.bat` through double clicking on it or through the command line  
+- To run, run `scripts\run.bat` through double clicking on it or through the command line  
 
 ### Eclipse
 
@@ -68,6 +68,6 @@ NOTE: You need TDM-GCC-64
 
 #### MinGW
 
-- Run `scripts\eclipse_mingw.bat`  
+- Run `scripts\eclipse_mingw.bat` through double clicking on it or through the command line  
 - Import the generated project in Eclipse  
 - Run 'client'  

@@ -9,3 +9,5 @@ cmake -G"MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug .. || goto :error
 mingw32-make -j4 || goto :error
 :error
 popd
+
+pause

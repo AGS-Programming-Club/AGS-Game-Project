@@ -12,3 +12,5 @@ if exist ..\.metadata (
 )
 :error
 popd
+
+pause
