@@ -2,9 +2,10 @@
 
 set SCRIPT_PATH=%~dp0
 
-pushd "%SCRIPT_PATH%"
+pushd "%SCRIPT_PATH%\.."
 mkdir build
-cd build &&
-cmake -G"MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug .. &&
-mingw32-make -j4
+cd build || goto :error
+cmake -G"MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug .. || goto :error
+mingw32-make -j4 || goto :error
+:error
 popd
