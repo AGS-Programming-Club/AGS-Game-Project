@@ -25,13 +25,12 @@ if (WIN32)
 
     if (MINGW)
         set (GLFW_LIBRARY_SEARCH_DIRS "${GLFW_ROOT_PATH}/lib-mingw")
-    elseif (MSVC)
-        # TODO distinguish between MSVC versions
-        set (GLFW_LIBRARY_SEARCH_DIRS "${GLFW_ROOT_PATH}/vc2012")
     else (MINGW)
-        set (FATAL_ERROR "Unknown compiler!")
+        set (FATAL_ERROR "Unsupported compiler!")
     endif (MINGW)
 endif (WIN32)
+
+message (${GLFW_LIBRARY_SEARCH_DIRS})
 
 find_path (GLFW_INCLUDE_DIR
     NAMES GLFW/glfw3.h

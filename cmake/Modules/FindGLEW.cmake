@@ -15,10 +15,8 @@ if (WIN32)
 
     if (MINGW)
         set (GLEW_LIBRARY_PREFIX "${GLEW_ROOT_PATH}/bin/Release")
-    elseif (MSVC)
-        set (GLEW_LIBRARY_PREFIX "${GLEW_ROOT_PATH}/lib/Release")
     else (MINGW)
-        set (FATAL_ERROR "Unknown compiler!")
+        set (FATAL_ERROR "Unsupported compiler!")
     endif (MINGW)
 
     set (GLEW_INCLUDE_SEARCH_DIRS "${GLEW_ROOT_PATH}/include")
