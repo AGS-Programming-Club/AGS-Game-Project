@@ -5,11 +5,11 @@ before_install:
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y # For gcc
     - sudo add-apt-repository ppa:pyglfw/pyglfw -y # For glfw
     - sudo apt-get update -y
-install:
-    - sudo apt-get install g++-4.9 libgl1-mesa-dev libglew-dev libglfw3-dev libglm-dev -y
     - wget http://www.cmake.org/files/v3.2/cmake-3.2.2-Linux-x86_64.sh -O /tmp/cmake-3.2.2-Linux-x86_64.sh
     - chmod a+x /tmp/cmake-3.2.2-Linux-x86_64.sh
     - sudo mkdir /opt/cmake
+install:
+    - sudo apt-get install g++-4.9 libgl1-mesa-dev libglew-dev libglfw3-dev libglm-dev -y
     - sudo /tmp/cmake-3.2.2-Linux-x86_64.sh --skip-license --prefix=/opt/cmake
     - export PATH=/opt/cmake/bin:${PATH}
 script:
@@ -17,3 +17,7 @@ script:
     - cd build
     - cmake ../
     - make
+
+notifications:
+    slack:
+        secure: gRq40iK3dV8hTbAFKfW31YyKvFEy5B6qmYNOQdpoaYVMCrzISKe+cwtQgHqKzzP+7cy8K0+AKai6e4TGLbjghpxvjaPGkVsCDBy2R0Spwv1+bpAYjO1H/6UBVOgH6Fo9MwHG5iiITPgxaiA5syD+viv2/gLkL6HFeUR4oc7Rr8Y=
