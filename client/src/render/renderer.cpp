@@ -5,6 +5,8 @@
 
 #include <string.h>
 #include <glm/glm.hpp>
+#include <list>
+#include <map>
 
 #include "log.hpp"
 #include "render/renderer.hpp"
@@ -48,9 +50,7 @@ namespace solidTriangle {
 	GLuint vbo;
 	GLuint program;
 
-	/** The top of the linked list implementation */
-	Data* head;
-	int size = 0;
+	list<Data*> triangles;
 
 	Data* add(vec2 a, vec2 b, vec2 c, vec4 colour) {
 		Data* d = new Data;
@@ -59,31 +59,18 @@ namespace solidTriangle {
 		d->c = c;
 		d->colour = colour;
 
-		d->next = head;
-		d->previous = NULL;
+		triangles.push_back(d);
 
-		if(head != NULL)
-			head->previous = d;
-
-		head = d;
-
-		size++;
 		update = true;
 
 		return d;
 	}
 
 	void remove(Data* data) {
-		if(data->next != NULL)
-			data->next->previous = data->previous;
-
-		if(data->previous != NULL)
-			data->previous->next = data->next;
+		triangles.remove(data);
 
 		delete data;
 		update = true;
-
-		size--;
 	}
 
 	void init() {
@@ -108,39 +95,37 @@ namespace solidTriangle {
 
 	void remakeBuffer() {
 		//TODO use mapped buffers
-		GLfloat data[size * DATA_SIZE_FLOAT];
+		GLfloat data[triangles.size() * DATA_SIZE_FLOAT];
 
-		Data* current = head;
+		list<Data*>::const_iterator iterator;
 		int i = 0;
-		while(current != NULL) {
+		for(iterator = triangles.begin(); iterator != triangles.end(); ++iterator) {
 			//vert 1
-			data[i++] = current->a.x;
-			data[i++] = current->a.y;
+			data[i++] = (*iterator)->a.x;
+			data[i++] = (*iterator)->a.y;
 
-			data[i++] = current->colour.r;
-			data[i++] = current->colour.g;
-			data[i++] = current->colour.b;
-			data[i++] = current->colour.a;
+			data[i++] = (*iterator)->colour.r;
+			data[i++] = (*iterator)->colour.g;
+			data[i++] = (*iterator)->colour.b;
+			data[i++] = (*iterator)->colour.a;
 
 			//vert 2
-			data[i++] = current->b.x;
-			data[i++] = current->b.y;
+			data[i++] = (*iterator)->b.x;
+			data[i++] = (*iterator)->b.y;
 
-			data[i++] = current->colour.r;
-			data[i++] = current->colour.g;
-			data[i++] = current->colour.b;
-			data[i++] = current->colour.a;
+			data[i++] = (*iterator)->colour.r;
+			data[i++] = (*iterator)->colour.g;
+			data[i++] = (*iterator)->colour.b;
+			data[i++] = (*iterator)->colour.a;
 
 			//vert 3
-			data[i++] = current->c.x;
-			data[i++] = current->c.y;
+			data[i++] = (*iterator)->c.x;
+			data[i++] = (*iterator)->c.y;
 
-			data[i++] = current->colour.r;
-			data[i++] = current->colour.g;
-			data[i++] = current->colour.b;
-			data[i++] = current->colour.a;
-
-			current = current->next;
+			data[i++] = (*iterator)->colour.r;
+			data[i++] = (*iterator)->colour.g;
+			data[i++] = (*iterator)->colour.b;
+			data[i++] = (*iterator)->colour.a;
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -155,7 +140,7 @@ namespace solidTriangle {
 
 		glBindVertexArray(vao);
 		glUseProgram(program);
-		glDrawArrays(GL_TRIANGLES, 0, size * 3);
+		glDrawArrays(GL_TRIANGLES, 0, triangles.size() * 3);
 	}
 }
 
@@ -170,9 +155,7 @@ namespace texturedTriangle {
 	GLuint vbo;
 	GLuint program = 0;
 
-	Data** start = new Data*[0]; //holds the start of each texture array, if the array has 0 length
-	int size = 0; //number of triangles
-	int* sizes = new int[0]; //holds the size of each texture array
+	map<int, list<Data*>> textures;
 
 	//NB arrays need to be updated whenever the number of textures change
 	int numberOfTextures = 0; //the number of textures
@@ -523,8 +506,7 @@ namespace line {
 	GLuint program = 0;
 
 	/** The top of the linked list implementation */
-	Data* head = NULL;
-	int size = 0;
+	list<Data*> lines;
 
 	Data* add(vec2 a, vec2 b, vec4 colour) {
 		Data* d = new Data;
@@ -532,30 +514,17 @@ namespace line {
 		d->b = b;
 		d->colour = colour;
 
-		d->next = head;
-		d->previous = NULL;
-
-		if(head != NULL)
-			head->previous = d;
-
-		head = d;
-
-		size++;
+		lines.push_front(d);
 
 		update = true;
 		return d;
 	}
 
 	void remove(Data* data) {
-		if(data->next != NULL)
-			data->next->previous = data->previous;
-
-		if(data->previous != NULL)
-			data->previous->next = data->next;
+		lines.remove(data);
 
 		delete data;
 
-		size--;
 		update = true;
 	}
 
@@ -581,30 +550,28 @@ namespace line {
 
 	void remakeBuffer() {
 		//TODO use mapped buffers
-		GLfloat data[size * DATA_SIZE_FLOAT];
+		GLfloat data[lines.size() * DATA_SIZE_FLOAT];
 
-		Data* current = head;
 		int i = 0;
-		while(current != NULL) {
+		list<Data*>::const_iterator iterator;
+		for(iterator = lines.begin(); iterator != lines.end(); ++iterator) {
 			//vert 1
-			data[i++] = current->a.x;
-			data[i++] = current->a.y;
+			data[i++] = (*iterator)->a.x;
+			data[i++] = (*iterator)->a.y;
 
-			data[i++] = current->colour.r;
-			data[i++] = current->colour.g;
-			data[i++] = current->colour.b;
-			data[i++] = current->colour.a;
+			data[i++] = (*iterator)->colour.r;
+			data[i++] = (*iterator)->colour.g;
+			data[i++] = (*iterator)->colour.b;
+			data[i++] = (*iterator)->colour.a;
 
 			//vert 2
-			data[i++] = current->b.x;
-			data[i++] = current->b.y;
+			data[i++] = (*iterator)->b.x;
+			data[i++] = (*iterator)->b.y;
 
-			data[i++] = current->colour.r;
-			data[i++] = current->colour.g;
-			data[i++] = current->colour.b;
-			data[i++] = current->colour.a;
-
-			current = current->next;
+			data[i++] = (*iterator)->colour.r;
+			data[i++] = (*iterator)->colour.g;
+			data[i++] = (*iterator)->colour.b;
+			data[i++] = (*iterator)->colour.a;
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -619,7 +586,7 @@ namespace line {
 
 		glBindVertexArray(vao);
 		glUseProgram(program);
-		glDrawArrays(GL_LINES, 0, size * 2);
+		glDrawArrays(GL_LINES, 0, lines.size() * 2);
 	}
 }
 
@@ -789,7 +756,7 @@ namespace render {
 		if(solidTriangle::size != 0)
 			solidTriangle::draw();
 
-		if(line::size != 0)
+		if(line::lines.size() != 0)
 			line::draw();
 
 		if(texturedTriangle::size != 0)

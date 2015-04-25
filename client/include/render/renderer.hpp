@@ -32,8 +32,6 @@ namespace texture {
 
 namespace solidTriangle {
 	struct Data {
-		Data* previous;
-		Data* next;
 		glm::vec2 a;
 		glm::vec2 b;
 		glm::vec2 c;
@@ -46,9 +44,6 @@ namespace solidTriangle {
 
 namespace texturedTriangle {
 	struct Data {
-		Data* previous;
-		Data* next;
-
 		glm::vec2 a;
 		glm::vec2 b;
 		glm::vec2 c;
@@ -66,9 +61,6 @@ namespace texturedTriangle {
 
 namespace line {
 	struct Data {
-		Data* previous;
-		Data* next;
-
 		glm::vec2 a;
 		glm::vec2 b;
 
@@ -82,13 +74,10 @@ namespace line {
 //not done yet
 namespace text {
 	struct Data {
-		Data* previous;
-		Data* next;
-
 		glm::vec2 pos;
 		glm::vec4 colour;
 		float size;
-		const char* text;
+		std::string text;
 		int length;
 		int image;
 	};
