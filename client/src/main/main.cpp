@@ -29,7 +29,7 @@ void d() {
 }
 
 void innit() {
-	render::init(3, 3, 4, "AGS Programing Group", true);
+	render::init(3, 3, 4, "AGS Programing Group", false);
 	glfwSwapInterval(1);
 	keybinds::init();
 
