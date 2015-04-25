@@ -1,4 +1,5 @@
 # AGS Game Project
+[![Build Status](https://travis-ci.org/AGS-Programming-Club/AGS-Game-Project.svg?branch=master)](https://travis-ci.org/AGS-Programming-Club/AGS-Game-Project)  
 This is the Game project for the AGS NZOI group.
 
 ## Requirements
