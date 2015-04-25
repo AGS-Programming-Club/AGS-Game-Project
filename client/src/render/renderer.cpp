@@ -221,31 +221,29 @@ namespace texturedTriangle {
 		//TODO use mapped buffers
 		GLfloat data[size * DATA_SIZE_FLOAT];
 
-		Data* current = NULL;
-
 		for(auto l1 : textures) {
 			int i = 0;
 			for(auto l2 : l1.second) {
 				//vert 1
-				data[i++] = current->a.x;
-				data[i++] = current->a.y;
+				data[i++] = l2->a.x;
+				data[i++] = l2->a.y;
 
-				data[i++] = current->p.s;
-				data[i++] = current->p.t;
-
-				//vert 2
-				data[i++] = current->b.x;
-				data[i++] = current->b.y;
-
-				data[i++] = current->q.s;
-				data[i++] = current->q.t;
+				data[i++] = l2->p.s;
+				data[i++] = l2->p.t;
 
 				//vert 2
-				data[i++] = current->c.x;
-				data[i++] = current->c.y;
+				data[i++] = l2->b.x;
+				data[i++] = l2->b.y;
 
-				data[i++] = current->r.s;
-				data[i++] = current->r.t;
+				data[i++] = l2->q.s;
+				data[i++] = l2->q.t;
+
+				//vert 2
+				data[i++] = l2->c.x;
+				data[i++] = l2->c.y;
+
+				data[i++] = l2->r.s;
+				data[i++] = l2->r.t;
 			}
 		}
 
