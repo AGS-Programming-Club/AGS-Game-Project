@@ -22,8 +22,8 @@ target_link_libraries (client ${GLFW_LIBRARIES})
 
 include_directories ("${GLM_INCLUDE_DIRS}")
 
-include_directories ("${FREEIMAGE_INCLUDE_DIR}")
-target_link_libraries (client ${FREEIMAGE_LIBRARIES})
+#include_directories ("${FREEIMAGE_INCLUDE_DIR}")
+#target_link_libraries (client ${FREEIMAGE_LIBRARIES})
 
 include_directories ("${LIQUIDFUN_INCLUDE_DIR}")
 target_link_libraries (client ${LIQUIDFUN_LIBRARIES})
