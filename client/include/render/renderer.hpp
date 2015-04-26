@@ -21,14 +21,38 @@ namespace render {
 	 * @param major The major version of opengl used.
 	 * @param minor The minor version of opengl used.
 	 * @param title The title to display on the window.
-	 * @param fullscreen whether to make the window fullscreen, if it is not the size is set to half the size of the screen. */
+	 * @param fullscreen whether to make the window fullscreen, if it is not the size is
+	 *  set to half the size of the screen. */
 	void init(int major, int minor, int samples, std::string title, bool fullscreen);
+
+	/** Renders all items and updates buffers if neccessary.
+	 **/
 	void tick();
+
+	/** @returns true if the OS has signaled the window to close or escape has been pressed
+	 **/
 	bool shouldClose();
+
+	/** Cleans the memory on the graphics card, forgetting to do this is very very bad
+	 */
 	void clean();
+
+	/** Checks the opengl driver for errors, this also clears the error buffer
+	 *
+	 * @returns true is there was an error, the error is then logged
+	 */
 	bool checkGL(std::string message);
+
+	/** Signals the renderer to send the camera data to the graphics card next frame
+	 */
 	void updateCamera();
+
+	/** @returns the position of the camera, when editing this make sure to call updateCamera();
+	 */
 	glm::vec2* getCameraPos();
+
+	/** @returns the scale of the camera, when editing this make sure to call updateCamera();
+	 */
 	glm::vec2* getCameraScale();
 }
 
@@ -97,7 +121,7 @@ namespace line {
 		glm::vec4 colour;
 	};
 
-	/** Adds a static textured triangle to the renderer queue
+	/** Adds a static line to the renderer queue
 	 *
 	 * @param a a point
 	 * @param b a point
