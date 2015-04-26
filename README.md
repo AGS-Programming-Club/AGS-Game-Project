@@ -72,3 +72,7 @@ NOTE: You need TDM-GCC-64
 - Run `scripts\eclipse_mingw.bat` through double clicking on it or through the command line  
 - Import the generated project in Eclipse  
 - Run 'client' in Eclipse (NOT the script)  
+
+### Doxygen
+
+- Run `doxygen Doxyfile`  
