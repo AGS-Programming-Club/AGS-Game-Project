@@ -61,7 +61,7 @@ void dup() {
 	render::updateCamera();
 }
 
-void pause() {
+void pauseGame() {
 	paused = !paused;
 }
 
@@ -81,7 +81,7 @@ void innit() {
 	keybinds::add(adown, GLFW_KEY_A, KEY_DOWN);
 	keybinds::add(sdown, GLFW_KEY_S, KEY_DOWN);
 	keybinds::add(ddown, GLFW_KEY_D, KEY_DOWN);
-	keybinds::add(pause, GLFW_KEY_SPACE, KEY_PRESSED);
+	keybinds::add(pauseGame, GLFW_KEY_SPACE, KEY_PRESSED);
 
 	//texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
 	//solidTriangle::add(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec4(0.5, 1, 0.5, 1));
