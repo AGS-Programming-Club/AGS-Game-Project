@@ -11,7 +11,7 @@ enum EventCode {KEY_DOWN, KEY_UP, KEY_PRESSED, KEY_RELEASED};
 namespace keybinds {
 	/** Adds an action to run on a key event
 	 * @param run the action to run on keypress
-	 * @param keycode the GLFW keycode to run the action on
+	 * @param keycode the GLFW keycode to run the action on, keycodes can be found here: http://www.glfw.org/docs/latest/group__keys.html
 	 * @param event the event type to run the action on @see EventCode
 	 **/
 	void add(void (*run)(), int keycode, EventCode event);
