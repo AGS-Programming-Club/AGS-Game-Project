@@ -14,7 +14,7 @@ if (WIN32)
     set (GLEW_ROOT_PATH "${PROJECT_SOURCE_DIR}/external/glew")
 
     if (MINGW)
-        set (GLEW_LIBRARY_PREFIX "${GLEW_ROOT_PATH}/bin/Release")
+        set (GLEW_LIBRARY_PREFIX "${GLEW_ROOT_PATH}/lib-mingw")
     else (MINGW)
         set (FATAL_ERROR "Unsupported compiler!")
     endif (MINGW)
@@ -26,7 +26,7 @@ if (WIN32)
         set (GLEW_LIBRARY_SEARCH_DIRS "${GLEW_LIBRARY_PREFIX}/x64")
     else (CMAKE_SIZEOF_VOID_P EQUAL 8)
         # 32 bit system
-        set (GLEW_LIBRARY_SEARCH_DIRS "${GLEW_LIBRARY_PREFIX}/Win32")
+        set (GLEW_LIBRARY_SEARCH_DIRS "${GLEW_LIBRARY_PREFIX}/x86")
     endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
 endif (WIN32)
 
@@ -36,8 +36,7 @@ find_path (GLEW_INCLUDE_DIR
 
 find_library (GLEW_LIBRARY
     NAMES GLEW glew32 glew glew32s
-    HINTS ${GLEW_LIBRARY_SEARCH_DIRS}
-    PATH_SUFFIXES lib64)
+    HINTS ${GLEW_LIBRARY_SEARCH_DIRS})
 
 set (GLEW_INCLUDE_DIRS ${GLEW_INCLUDE_DIR})
 set (GLEW_LIBRARIES ${GLEW_LIBRARY})

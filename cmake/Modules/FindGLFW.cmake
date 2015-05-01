@@ -13,21 +13,21 @@ unset (GLFW_LIBRARY_SEARCH_DIRS)
 if (WIN32)
     set (GLFW_ROOT_PATH "${PROJECT_SOURCE_DIR}/external/glfw")
 
-    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        # 64 bit system
-        set (GLFW_ROOT_PATH "${GLFW_ROOT_PATH}/WIN64")
-    else (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        # 32 bit system
-        set (GLFW_ROOT_PATH "${GLFW_ROOT_PATH}/WIN32")
-    endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
-
-    set (GLFW_INCLUDE_SEARCH_DIRS "${GLFW_ROOT_PATH}/include")
-
     if (MINGW)
-        set (GLFW_LIBRARY_SEARCH_DIRS "${GLFW_ROOT_PATH}/lib-mingw")
+        set (GLFW_LIBRARY_PREFIX "${GLFW_ROOT_PATH}/lib-mingw")
     else (MINGW)
         set (FATAL_ERROR "Unsupported compiler!")
     endif (MINGW)
+
+    set (GLFW_INCLUDE_SEARCH_DIRS "${GLFW_ROOT_PATH}/include")
+
+    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+        # 64 bit system
+        set (GLFW_LIBRARY_SEARCH_DIRS "${GLFW_LIBRARY_PREFIX}/x64")
+    else (CMAKE_SIZEOF_VOID_P EQUAL 8)
+        # 32 bit system
+        set (GLFW_LIBRARY_SEARCH_DIRS "${GLFW_LIBRARY_PREFIX}/x86")
+    endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
 endif (WIN32)
 
 find_path (GLFW_INCLUDE_DIR
