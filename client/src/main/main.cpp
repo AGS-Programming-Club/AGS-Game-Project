@@ -1,52 +1,35 @@
 #include <GL/glew.h>
-#include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include <string>
+#include "log.hpp"
+#include "inputio/keybinds.hpp"
 #include "render/renderer.hpp"
 #include "render/texture.hpp"
-#include "inputio/keybinds.hpp"
-#include "log.hpp"
+#include "scene/scenemanager.hpp"
+#include "scene/gamescene.hpp"
+#include "scene/menuscene.hpp"
 
 using namespace std;
 using namespace glm;
 
-void w() {
-	render::getCameraPos()->y -= 0.001;
-	render::updateCamera();
-}
-void a() {
-	render::getCameraPos()->x += 0.001;
-	render::updateCamera();
-}
-void s() {
-	render::getCameraPos()->y += 0.001;
-	render::updateCamera();
-}
-void d() {
-	render::getCameraPos()->x -= 0.001;
-	render::updateCamera();
-}
-
-void innit() {
-	render::init(3, 3, 4, "AGS Programing Group", false);
+void init() {
+	render::init(3, 3, 4, "AGS Programming Group", false);
 	glfwSwapInterval(1);
 	keybinds::init();
-
+	SceneManager::init(false);
+	
+	// I wanted to control this in the Scene classes for better modularity but I can't really since there is no way to unload an image
 	GLuint image = image::loadBMP("courier");
 	texture::bind(image, 0);
-
-	keybinds::add(w, GLFW_KEY_W, KEY_DOWN);
-	keybinds::add(a, GLFW_KEY_A, KEY_DOWN);
-	keybinds::add(s, GLFW_KEY_S, KEY_DOWN);
-	keybinds::add(d, GLFW_KEY_D, KEY_DOWN);
-
-	texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
-	solidTriangle::add(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec4(0.5, 1, 0.5, 1));
-
-	text::add(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "abcd TEXT text Texty text", 0);
-
-	line::add(vec2(-0.5, 0), vec2(0.5, 0), vec4(1, 0.5, 0.5, 1));
+	
+	SceneManager::defineScene("Game", new GameScene());
+	SceneManager::defineScene("Menu", new MenuScene());
+	
+	// comment the following as appropriate if you want to see the menu screen (just a placeholder for now)
+	SceneManager::changeScene("Menu");
+	//SceneManager::changeScene("Game");
 }
 
 namespace fps {
@@ -62,6 +45,7 @@ void gameLoop() {
 
 		render::tick();
 		keybinds::poll();
+		SceneManager::update();
 
 		if(CHECK_GL())
 			return;
@@ -74,7 +58,7 @@ void cleanUp() {
 }
 
 int main() {
-	innit();
+	init();
 	gameLoop();
 	cleanUp();
 }
