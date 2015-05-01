@@ -33,9 +33,6 @@ void GameScene::init() {
 	keybinds::add(s, GLFW_KEY_S, KEY_DOWN);
 	keybinds::add(d, GLFW_KEY_D, KEY_DOWN);
 	
-	GLuint image = image::loadBMP("courier");
-	texture::bind(image, 0);
-	
 	triangle1 = texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
 	triangle2 = solidTriangle::add(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec4(0.5, 1, 0.5, 1));
 	text1 = text::add(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "abcd TEXT text Texty text", 0);
@@ -49,8 +46,6 @@ void GameScene::dispose() {
 	keybinds::remove(a, GLFW_KEY_A, KEY_DOWN);
 	keybinds::remove(s, GLFW_KEY_S, KEY_DOWN);
 	keybinds::remove(d, GLFW_KEY_D, KEY_DOWN);
-	
-	texture::bind(0, 0);
 	
 	texturedTriangle::remove(triangle1);
 	solidTriangle::remove(triangle2);

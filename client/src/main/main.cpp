@@ -20,6 +20,9 @@ void init() {
 	keybinds::init();
 	SceneManager::init(false);
 	
+	GLuint image = image::loadBMP("courier");
+	texture::bind(image, 0);
+	
 	SceneManager::defineScene("Game", new GameScene());
 	SceneManager::defineScene("Menu", new MenuScene());
 	
