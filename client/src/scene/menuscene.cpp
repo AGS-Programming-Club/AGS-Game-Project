@@ -10,6 +10,7 @@
 #include "log.hpp"
 #include "inputio/keybinds.hpp"
 #include "render/renderer.hpp"
+#include "render/texture.hpp"
 #include "scene/menuscene.hpp"
 #include "scene/scenemanager.hpp"
 
@@ -24,6 +25,9 @@ void MenuScene::init() {
 	
 	keybinds::add(spacePressed, GLFW_KEY_SPACE, KEY_DOWN);
 	
+	GLuint image = image::loadBMP("courier");
+	texture::bind(image, 0);
+	
 	menuText = text::add(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "Press space to continue", 0);
 }
 
@@ -31,6 +35,8 @@ void MenuScene::dispose() {
 	log(INFO, "Disposing of MenuScene");
 	
 	keybinds::remove(spacePressed, GLFW_KEY_SPACE, KEY_DOWN);
+	
+	texture::bind(0, 0);
 	
 	text::remove(menuText);
 }

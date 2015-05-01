@@ -20,10 +20,6 @@ void init() {
 	keybinds::init();
 	SceneManager::init(false);
 	
-	// I wanted to control this in the Scene classes for better modularity but I can't really since there is no way to unload an image
-	GLuint image = image::loadBMP("courier");
-	texture::bind(image, 0);
-	
 	SceneManager::defineScene("Game", new GameScene());
 	SceneManager::defineScene("Menu", new MenuScene());
 	
