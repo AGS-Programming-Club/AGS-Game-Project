@@ -77,7 +77,7 @@ class RenderJob {
 		void updateCamera();
 
 		int totalTexturedSize();
-		int letters = 0;
+		int letters;
 
 	public:
 		RenderJob() {
