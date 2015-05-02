@@ -5,6 +5,8 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include <cstring>
+#include <list>
+#include <map>
 #include <glm/glm.hpp>
 
 #define SFILE (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
@@ -14,7 +16,133 @@
 #define CHECK_GL() render::checkGL("GL Error " + std::string(SFILE) + "." + LINE_STRING + ": ")
 
 namespace render {
-	/** Returns the window object */
+	class RenderJob {
+		public:
+			struct SolidTriangleData {
+				glm::vec2 a;
+				glm::vec2 b;
+				glm::vec2 c;
+				glm::vec4 colour;
+			};
+
+			struct TexturedTriangleData {
+				glm::vec2 a;
+				glm::vec2 b;
+				glm::vec2 c;
+
+				glm::vec2 p;
+				glm::vec2 q;
+				glm::vec2 r;
+
+				int texture; //this may be removed later
+			};
+
+			struct LineData {
+				glm::vec2 a;
+				glm::vec2 b;
+				glm::vec4 colour;
+			};
+
+			struct TextData {
+				glm::vec2 pos;
+				glm::vec4 colour;
+				float size;
+				std::string text;
+				int length;
+				int image;
+			};
+
+		private:
+			glm::mat3 matrix;
+
+			bool updateSolidTriangle = false;
+			bool updateTexturedTriangle = false;
+			bool updateText = false;
+			bool updateLine = false;
+
+			std::list<SolidTriangleData*> solidTriangles;
+			std::map<int, std::list<SolidTriangleData*>> texturedTriangles;
+			std::map<int, std::list<TextData*>> text;
+			std::list<LineData*> lines;
+
+			void remakeSolidTriangleBuffer();
+			void remakeTexturedTriangleBuffer();
+			void remakeLineBuffer();
+			void remakeTextBuffer();
+
+			void drawSolidTriangles();
+			void drawTexturedTriangles();
+			void drawLines();
+			void drawText();
+			void draw();
+
+			int totalTexturedSize();
+			int letters;
+
+		public:
+			/** @returns the matrix used for camera transformations, if you change the value it will update automatically
+			 * on the GPU.
+			 **/
+			glm::mat3* getCameraMatrix();
+
+			/** Adds a static solid flat shaded triangle to the renderer queue
+			 *
+			 * @param a a point
+			 * @param b a point
+			 * @param c yet another point, these must be in counterclockwise order
+			 * @param colour the colour of the triangle */
+			SolidTriangleData* addSolidTriangle(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec4 colour);
+
+			/** removes a triangle using the pointer returned in @see solidTriangle::add */
+			void removeSolidTriangle(SolidTriangleData* triangle);
+
+			/** Adds a static textured triangle to the renderer queue
+			 *
+			 * @param a a point
+			 * @param b a point
+			 * @param c yet another point, these must be in counterclockwise order
+			 *
+			 * @param p Texture coordinates for a
+			 * @param q b
+			 * @param r and c
+			 *
+			 * @param texture the texture index to draw from */
+			TexturedTriangleData* addTexturedTriangleData(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 p, glm::vec2 q, glm::vec2 r, int texture);
+
+			void removeTexturedTriangleData(TexturedTriangleData* triangle);
+
+			/** Adds a static line to the renderer queue
+			 *
+			 * @param a a point
+			 * @param b a point
+			 * @param colour the colour of the line */
+			LineData* addlineData(glm::vec2 a, glm::vec2 b, glm::vec4 colour);
+
+			void removelineData(LineData* line);
+
+			/** Adds a text job to the renderer, this is not to be used for bulk objects that move, that will cause performance issues.
+			 * @param pos the lower left corner of the text in world coordinates
+			 * @param colour the colour of the text in rgba.
+			 * @param text the string to be rendererd, NB: carrabge returns and tabbs are not yet supported
+			 * @param image The image index that the text bitmap was loaded into, @see texture::bind()*/
+			TextData* addText(glm::vec2 pos, glm::vec4 colour, float size, std::string text, int image);
+
+			/** Removes a text job via the handle returned in @see text::add
+			 * @param the data returned from @see text::add */
+			void removeText(TextData* text);
+	};
+
+	/** Creates a renderJob with a specific camera transform
+	 * @returns created RenderJob object
+	 **/
+	RenderJob* createRenderJob();
+
+	//TODO possible overloading of delete
+	/** Deletes a RenderJob from the queue, all data will be lost
+	 **/
+	void deleteRenderJob(RenderJob* job);
+
+	/** @returns the window object */
 	GLFWwindow* getWindow();
 
 	/** Creates the opengl context and displays the window.
@@ -46,14 +174,6 @@ namespace render {
 	/** Signals the renderer to send the camera data to the graphics card next frame
 	 */
 	void updateCamera();
-
-	/** @returns the position of the camera, when editing this make sure to call updateCamera();
-	 */
-	glm::vec2* getCameraPos();
-
-	/** @returns the scale of the camera, when editing this make sure to call updateCamera();
-	 */
-	glm::vec2* getCameraScale();
 }
 
 namespace texture {
@@ -64,93 +184,4 @@ namespace texture {
 	 * @param the id to bind the image to, this must be below 32. */
 	void bind(GLuint image, int unit);
 }
-
-namespace solidTriangle {
-	struct Data {
-		glm::vec2 a;
-		glm::vec2 b;
-		glm::vec2 c;
-		glm::vec4 colour;
-	};
-
-	/** Adds a static solid flat shaded triangle to the renderer queue
-	 *
-	 * @param a a point
-	 * @param b a point
-	 * @param c yet another point, these must be in counterclockwise order
-	 * @param colour the colour of the triangle */
-	Data* add(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec4 colour);
-
-	/** removes a triangle using the pointer returned in @see solidTriangle::add */
-	void remove(Data* triangle);
-}
-
-namespace texturedTriangle {
-	struct Data {
-		glm::vec2 a;
-		glm::vec2 b;
-		glm::vec2 c;
-
-		glm::vec2 p;
-		glm::vec2 q;
-		glm::vec2 r;
-
-		int texture; //this may be removed later
-	};
-
-	/** Adds a static textured triangle to the renderer queue
-		 *
-		 * @param a a point
-		 * @param b a point
-		 * @param c yet another point, these must be in counterclockwise order
-		 *
-		 * @param p Texture coordinates for a
-		 * @param q b
-		 * @param r and c
-		 *
-		 * @param texture the texture index to draw from */
-	Data* add(glm::vec2 a, glm::vec2 b, glm::vec2 c, glm::vec2 p, glm::vec2 q, glm::vec2 r, int texture);
-	void remove(Data* triangle);
-}
-
-namespace line {
-	struct Data {
-		glm::vec2 a;
-		glm::vec2 b;
-
-		glm::vec4 colour;
-	};
-
-	/** Adds a static line to the renderer queue
-	 *
-	 * @param a a point
-	 * @param b a point
-	 * @param colour the colour of the line */
-	Data* add(glm::vec2 a, glm::vec2 b, glm::vec4 colour);
-	void remove(Data* line);
-}
-
-//not done yet
-namespace text {
-	struct Data {
-		glm::vec2 pos;
-		glm::vec4 colour;
-		float size;
-		std::string text;
-		int length;
-		int image;
-	};
-
-	/** Adds a text job to the renderer, this is not to be used for bulk objects that move, that will cause performance issues.
-	 * @param pos the lower left corner of the text in world coordinates
-	 * @param colour the colour of the text in rgba.
-	 * @param text the string to be rendererd, NB: carrabge returns and tabbs are not yet supported
-	 * @param image The image index that the text bitmap was loaded into, @see texture::bind()*/
-	Data* add(glm::vec2 pos, glm::vec4 colour, float size, std::string text, int image);
-
-	/** Removes a text job via the handle returned in @see text::add
-	 * @param the data returned from @see text::add */
-	void remove(Data* text);
-}
-
 #endif
