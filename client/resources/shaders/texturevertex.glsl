@@ -8,6 +8,6 @@ layout(location = 1) in vec2 textureCoords;
 out vec2 f_textureCoords;
 
 void main() {
-	gl_Position = vec4((matrix * vec3(position, 1)).xyz, 0, 1);
+	gl_Position = vec4((matrix * vec3(position, 1)).xy, 0, 1);
 	f_textureCoords = textureCoords;
 }
