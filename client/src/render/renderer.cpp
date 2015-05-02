@@ -21,7 +21,6 @@ namespace render {
 	GLuint text_sampler;
 	GLuint texture_mat;
 	GLuint texture_sampler;
-
 }
 
 //All data is considered persistant and is kept in a single buffer per render type, dynamic data will be added latter
@@ -163,7 +162,7 @@ namespace text {
 
 /** Holds methods used to render coloured lines */
 namespace line {
-	const int DATA_SIZE_FLOAT = 16;
+	const int DATA_SIZE_FLOAT = 12;
 
 	GLuint vao;
 	GLuint vbo;
@@ -188,8 +187,7 @@ namespace line {
 		glDeleteVertexArrays(1, &vao);
 		glDeleteProgram(program);
 	}
-
-	}
+}
 
 //holds rendering methods
 namespace render {
@@ -248,12 +246,12 @@ namespace render {
 		text::program = program::create(textArray);
 		texturedTriangle::program = program::create(textureArray);
 
-		render::colour_mat = glGetUniformLocation(line::program, "mat");
+		render::colour_mat = glGetUniformLocation(line::program, "matrix");
 
-		render::text_mat = glGetUniformLocation(text::program, "mat");
+		render::text_mat = glGetUniformLocation(text::program, "matrix");
 		render::text_sampler = glGetUniformLocation(text::program, "image");
 
-		render::texture_mat = glGetUniformLocation(texturedTriangle::program, "mat");
+		render::texture_mat = glGetUniformLocation(texturedTriangle::program, "matrix");
 		render::texture_sampler = glGetUniformLocation(texturedTriangle::program, "image");
 
 		CHECK_GL();
@@ -330,6 +328,7 @@ namespace render {
 
 	/* Swaps buffers and renders the queued shapes */
 	void tick() {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -429,7 +428,7 @@ void RenderJob::remakeSolidTriangleBuffer() {
 
 /** Draws the current queue onto the currently bound framebuffer */
 void RenderJob::draw() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	updateCamera();
 
 	if(solidTriangles.size() != 0)
 		drawSolidTriangles();
@@ -628,7 +627,6 @@ void RenderJob::drawText() {
 		acc += f;
 	}
 }
-
 
 RenderJob::LineData* RenderJob::addLine(vec2 a, vec2 b, vec4 colour) {
 	LineData* d = new LineData;

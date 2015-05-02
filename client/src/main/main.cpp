@@ -19,7 +19,7 @@ void innit() {
 	GLuint image = image::loadBMP("courier");
 	texture::bind(image, 0);
 
-	render::getWorldJob()->addLine(vec2(0.5, 0.5), vec2(-0.5, -0.5), vec4(1, 1, 1, 0.5));
+	render::getWorldJob()->addText(vec2(-1, 0), vec4(1, 1, 1, 1), 0.1, "TEST NUMBER #2", 0);
 }
 
 namespace fps {
