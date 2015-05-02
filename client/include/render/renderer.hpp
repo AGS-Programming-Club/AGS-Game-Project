@@ -54,10 +54,10 @@ class RenderJob {
 	private:
 		glm::mat3 matrix;
 
-		bool updateSolidTriangle = false;
-		bool updateTexturedTriangle = false;
-		bool updateText = false;
-		bool updateLine = false;
+		bool updateSolidTriangle;
+		bool updateTexturedTriangle;
+		bool updateText;
+		bool updateLine;
 
 		std::list<SolidTriangleData*> solidTriangles;
 		std::map<int, std::list<TexturedTriangleData*>> texturedTriangles;
@@ -80,6 +80,21 @@ class RenderJob {
 		int letters = 0;
 
 	public:
+		RenderJob() {
+			letters = 0;
+			solidTriangles = std::list<SolidTriangleData*>();
+			texturedTriangles = std::map<int, std::list<TexturedTriangleData*>>();
+			textJobs = std::map<int, std::list<TextData*>>();
+			lines = std::list<LineData*>();
+
+			updateSolidTriangle = false;
+			updateTexturedTriangle = false;
+			updateText = false;
+			updateLine = false;
+
+			matrix = glm::mat3(1.0);
+		}
+
 		/** For internal use only, do not use.
 		 **/
 		void draw();
