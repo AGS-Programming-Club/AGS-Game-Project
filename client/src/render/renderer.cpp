@@ -16,62 +16,22 @@ using namespace std;
 using namespace glm;
 
 namespace render {
-	vec2 position = vec2(0, 0);
-	vec2 scale = vec2(1, 1);
-
-	GLuint colour_c_pos;
-	GLuint colour_c_scale;
-	GLuint text_c_pos;
-	GLuint text_c_scale;
+	GLuint colour_mat;
+	GLuint text_mat;
 	GLuint text_sampler;
-	GLuint texture_c_pos;
-	GLuint texture_c_scale;
+	GLuint texture_mat;
 	GLuint texture_sampler;
-
-	vec2* getCameraPos() {
-		return &position;
-	}
-
-	vec2* getCameraScale() {
-		return &scale;
-	}
 }
 
 //All data is considered persistant and is kept in a single buffer per render type, dynamic data will be added latter
 
 /** Holds methods used to render solid triangles */
 namespace solidTriangle {
-	/** whether the GPU buffer needs to be updated next frame */
-	bool update = false;
-
 	int DATA_SIZE_FLOAT = 18;
 
 	GLuint vao;
 	GLuint vbo;
 	GLuint program;
-
-	list<Data*> triangles;
-
-	Data* add(vec2 a, vec2 b, vec2 c, vec4 colour) {
-		Data* d = new Data;
-		d->a = a;
-		d->b = b;
-		d->c = c;
-		d->colour = colour;
-
-		triangles.push_back(d);
-
-		update = true;
-
-		return d;
-	}
-
-	void remove(Data* data) {
-		triangles.remove(data);
-
-		delete data;
-		update = true;
-	}
 
 	void init() {
 		glGenVertexArrays(1, &vao);
@@ -92,108 +52,15 @@ namespace solidTriangle {
 		glDeleteVertexArrays(1, &vao);
 		//glDeleteProgram(program); removed so the the solid colour program is not deleted twice
 	}
-
-	void remakeBuffer() {
-		//TODO use mapped buffers
-		GLfloat data[triangles.size() * DATA_SIZE_FLOAT];
-
-		list<Data*>::const_iterator iterator;
-		int i = 0;
-		for(iterator = triangles.begin(); iterator != triangles.end(); ++iterator) {
-			//vert 1
-			data[i++] = (*iterator)->a.x;
-			data[i++] = (*iterator)->a.y;
-
-			data[i++] = (*iterator)->colour.r;
-			data[i++] = (*iterator)->colour.g;
-			data[i++] = (*iterator)->colour.b;
-			data[i++] = (*iterator)->colour.a;
-
-			//vert 2
-			data[i++] = (*iterator)->b.x;
-			data[i++] = (*iterator)->b.y;
-
-			data[i++] = (*iterator)->colour.r;
-			data[i++] = (*iterator)->colour.g;
-			data[i++] = (*iterator)->colour.b;
-			data[i++] = (*iterator)->colour.a;
-
-			//vert 3
-			data[i++] = (*iterator)->c.x;
-			data[i++] = (*iterator)->c.y;
-
-			data[i++] = (*iterator)->colour.r;
-			data[i++] = (*iterator)->colour.g;
-			data[i++] = (*iterator)->colour.b;
-			data[i++] = (*iterator)->colour.a;
-		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
-
-		update = false;
-	}
-
-	void draw() {
-		if(update)
-			remakeBuffer();
-
-		glBindVertexArray(vao);
-		glUseProgram(program);
-		glDrawArrays(GL_TRIANGLES, 0, triangles.size() * 3);
-	}
 }
 
 /** Holds methods used to render solid triangles */
 namespace texturedTriangle {
-	/** whether the GPU buffer needs to be updated next frame */
-	bool update = false;
-
 	int DATA_SIZE_FLOAT = 12;
 
 	GLuint vao;
 	GLuint vbo;
 	GLuint program = 0;
-
-	map<int, list<Data*>> textures;
-
-	int totalSize() {
-		int acc = 0;
-		for(auto l : textures) {
-			acc += l.second.size();
-		}
-
-		return acc;
-	}
-
-	Data* add(vec2 a, vec2 b, vec2 c, vec2 p, vec2 q, vec2 r, int texture) {
-		if(textures.find(texture) == textures.end()) {
-			textures[texture] = list<Data*>();
-		}
-
-		Data* d = new Data;
-		d->a = a;
-		d->b = b;
-		d->c = c;
-		d->p = p;
-		d->q = q;
-		d->r = r;
-		d->texture = texture;
-
-		textures[texture].push_back(d);
-
-		update = true;
-
-		return d;
-	}
-
-	void remove(Data* data) {
-		textures[data->texture].remove(data);
-
-		delete data;
-
-		update = true;
-	}
 
 	void init() {
 		glGenVertexArrays(1, &vao);
@@ -214,62 +81,6 @@ namespace texturedTriangle {
 		glDeleteVertexArrays(1, &vao);
 		glDeleteProgram(program);
 	}
-
-	void remakeBuffer() {
-		int size = totalSize();
-
-		//TODO use mapped buffers
-		GLfloat data[size * DATA_SIZE_FLOAT];
-
-		for(auto l1 : textures) {
-			int i = 0;
-			for(auto l2 : l1.second) {
-				//vert 1
-				data[i++] = l2->a.x;
-				data[i++] = l2->a.y;
-
-				data[i++] = l2->p.s;
-				data[i++] = l2->p.t;
-
-				//vert 2
-				data[i++] = l2->b.x;
-				data[i++] = l2->b.y;
-
-				data[i++] = l2->q.s;
-				data[i++] = l2->q.t;
-
-				//vert 2
-				data[i++] = l2->c.x;
-				data[i++] = l2->c.y;
-
-				data[i++] = l2->r.s;
-				data[i++] = l2->r.t;
-			}
-		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
-
-		update = false;
-	}
-
-	void draw() {
-		if(update)
-			remakeBuffer();
-
-		glBindVertexArray(vao);
-		glUseProgram(program);
-
-		int acc = 0;
-		for(auto i : textures) {
-			if(i.second.size() == 0)
-				continue;
-
-			glUniform1i(render::texture_sampler, i.first);
-			glDrawArrays(GL_TRIANGLES, acc, i.second.size() * 3);
-			acc += i.second.size();
-		}
-	}
 }
 
 /** Holds methods used to render text */
@@ -286,43 +97,6 @@ namespace text {
 	GLuint staticVbo;
 	GLuint program = 0;
 
-	map<int, list<Data*>> textures;
-	int letters = 0;
-
-	//NB arrays need to be updated whenever the number of textures change
-	int numberOfTextures = 0; //the number of textures
-
-	Data* add(vec2 pos, vec4 colour, float size, string text, int image) {
-		if(textures.find(image) == textures.end()) {
-			textures[image] = list<Data*>();
-		}
-
-		Data* d = new Data;
-		d->pos = pos;
-		d->colour = colour;
-		d->size = size;
-		d->text = text.c_str();
-		d->image = image;
-		d->length = text.length();
-
-		letters += d->length;
-
-		textures[image].push_back(d);
-
-		update = true;
-
-		return d;
-	}
-
-	void remove(Data* data) {
-		letters -= data->length;
-
-		textures[data->image].remove(data);
-
-		delete data;
-
-		update = true;
-	}
 
 	const float vertexs[] = {
 			0, 0,
@@ -376,38 +150,7 @@ namespace text {
 
 	const float WIDTH_SCALE = 0.5;
 
-	void remakeBuffer() {
-		//TODO use mapped buffers
-		GLfloat data[letters * DATA_SIZE_FLOAT];
-
-		int i = 0;
-
-		for(auto texture : textures) {
-			for(auto line : texture.second) {
-				int q = 0;
-				for(char& c : line->text) {
-					((int*) data)[i++] = getCharCode(c);
-
-					data[i++] = line->pos.x + line->size * q++ * WIDTH_SCALE; //this assumes unispace font
-					data[i++] = line->pos.y;
-
-					data[i++] = line->colour.r;
-					data[i++] = line->colour.g;
-					data[i++] = line->colour.b;
-					data[i++] = line->colour.a;
-
-					data[i++] = line->size;
-				}
-			}
-		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
-
-		update = false;
-	}
-
-	int getLetterLength(list<Data*> texture) {
+	int getLetterLength(list<RenderJob::TextData*> texture) {
 		int acc = 0;
 		for(auto line : texture) {
 			acc += line->text.length();
@@ -415,59 +158,15 @@ namespace text {
 
 		return acc;
 	}
-
-	void draw() {
-		if(update)
-			remakeBuffer();
-
-		glBindVertexArray(vao);
-		glUseProgram(program);
-
-		int acc = 0;
-		for(auto texture : textures) {
-			if(texture.second.size() == 0)
-				continue;
-
-			glUniform1i(render::text_sampler, texture.first);
-			int f = getLetterLength(texture.second);
-			glDrawArraysInstanced(GL_TRIANGLES, acc, 6, f);
-			acc += f;
-		}
-	}
 }
 
 /** Holds methods used to render coloured lines */
 namespace line {
-	/** whether the GPU buffer needs to be updated next frame */
-	bool update = false;
-	const int DATA_SIZE_FLOAT = 16;
+	const int DATA_SIZE_FLOAT = 12;
 
 	GLuint vao;
 	GLuint vbo;
 	GLuint program = 0;
-
-	/** The top of the linked list implementation */
-	list<Data*> lines;
-
-	Data* add(vec2 a, vec2 b, vec4 colour) {
-		Data* d = new Data;
-		d->a = a;
-		d->b = b;
-		d->colour = colour;
-
-		lines.push_front(d);
-
-		update = true;
-		return d;
-	}
-
-	void remove(Data* data) {
-		lines.remove(data);
-
-		delete data;
-
-		update = true;
-	}
 
 	void init() {
 		glGenVertexArrays(1, &vao);
@@ -488,55 +187,31 @@ namespace line {
 		glDeleteVertexArrays(1, &vao);
 		glDeleteProgram(program);
 	}
-
-	void remakeBuffer() {
-		//TODO use mapped buffers
-		GLfloat data[lines.size() * DATA_SIZE_FLOAT];
-
-		int i = 0;
-		list<Data*>::const_iterator iterator;
-		for(iterator = lines.begin(); iterator != lines.end(); ++iterator) {
-			//vert 1
-			data[i++] = (*iterator)->a.x;
-			data[i++] = (*iterator)->a.y;
-
-			data[i++] = (*iterator)->colour.r;
-			data[i++] = (*iterator)->colour.g;
-			data[i++] = (*iterator)->colour.b;
-			data[i++] = (*iterator)->colour.a;
-
-			//vert 2
-			data[i++] = (*iterator)->b.x;
-			data[i++] = (*iterator)->b.y;
-
-			data[i++] = (*iterator)->colour.r;
-			data[i++] = (*iterator)->colour.g;
-			data[i++] = (*iterator)->colour.b;
-			data[i++] = (*iterator)->colour.a;
-		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
-
-		update = false;
-	}
-
-	void draw() {
-		if(update)
-			remakeBuffer();
-
-		glBindVertexArray(vao);
-		glUseProgram(program);
-		glDrawArrays(GL_LINES, 0, lines.size() * 2);
-	}
 }
 
 //holds rendering methods
 namespace render {
-	bool cameraChange = true;
+	list<RenderJob*> jobs;
+	RenderJob* ui;
+	RenderJob* world;
 
-	void updateCamera() {
-		cameraChange = true;
+	RenderJob* getWorldJob() {
+		return world;
+	}
+
+	RenderJob* getUIJob() {
+		return ui;
+	}
+
+	RenderJob* createRenderJob() {
+		RenderJob* job = new RenderJob();
+		jobs.push_back(job);
+		return job;
+	}
+
+	void deleteRenderJob(RenderJob* job) {
+		jobs.remove(job);
+		delete job;
 	}
 
 	bool checkGL(string message) {
@@ -571,15 +246,12 @@ namespace render {
 		text::program = program::create(textArray);
 		texturedTriangle::program = program::create(textureArray);
 
-		render::colour_c_pos = glGetUniformLocation(line::program, "c_pos");
-		render::colour_c_scale = glGetUniformLocation(line::program, "c_scale");
+		render::colour_mat = glGetUniformLocation(line::program, "matrix");
 
-		render::text_c_pos = glGetUniformLocation(text::program, "c_pos");
-		render::text_c_scale = glGetUniformLocation(text::program, "c_scale");
+		render::text_mat = glGetUniformLocation(text::program, "matrix");
 		render::text_sampler = glGetUniformLocation(text::program, "image");
 
-		render::texture_c_pos = glGetUniformLocation(texturedTriangle::program, "c_pos");
-		render::texture_c_scale = glGetUniformLocation(texturedTriangle::program, "c_scale");
+		render::texture_mat = glGetUniformLocation(texturedTriangle::program, "matrix");
 		render::texture_sampler = glGetUniformLocation(texturedTriangle::program, "image");
 
 		CHECK_GL();
@@ -643,32 +315,20 @@ namespace render {
 		solidTriangle::init();
 		texturedTriangle::init();
 		text::init();
+
+		ui = createRenderJob();
+		world = createRenderJob();
 	}
 
-	void draw();
-
-	void updateCamera_impl() {
-		glUseProgram(texturedTriangle::program);
-		glUniform2f(render::texture_c_pos, position.x, position.y);
-		glUniform2f(render::texture_c_scale, scale.x, scale.y);
-
-		glUseProgram(text::program);
-		glUniform2f(render::text_c_pos, position.x, position.y);
-		glUniform2f(render::text_c_scale, scale.x, scale.y);
-
-		glUseProgram(line::program);
-		glUniform2f(render::colour_c_pos, position.x, position.y);
-		glUniform2f(render::colour_c_scale, scale.x, scale.y);
-
-		cameraChange = false;
+	void draw() {
+		for(auto job : jobs) {
+			job->draw();
+		}
 	}
 
 	/* Swaps buffers and renders the queued shapes */
 	void tick() {
-		if(cameraChange) {
-			updateCamera_impl();
-		}
-
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		draw();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -689,23 +349,6 @@ namespace render {
 
 		glfwTerminate();
 	}
-
-	/** Draws the current queue onto the currently bound framebuffer */
-	void draw() {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		if(solidTriangle::triangles.size() != 0)
-			solidTriangle::draw();
-
-		if(line::lines.size() != 0)
-			line::draw();
-
-		if(texturedTriangle::totalSize() != 0)
-			texturedTriangle::draw();
-
-		if(text::letters != 0)
-			text::draw();
-	}
 }
 
 namespace texture {
@@ -715,4 +358,344 @@ namespace texture {
 		glActiveTexture(GL_TEXTURE0 + unit);
 		glBindTexture(GL_TEXTURE_2D, image);
 	}
+}
+
+//class implementaions, first time with c++ classes please let me know if I am doing it wrong
+RenderJob::SolidTriangleData* RenderJob::addSolidTriangle(vec2 a, vec2 b, vec2 c, vec4 colour) {
+	SolidTriangleData* d = new RenderJob::SolidTriangleData;
+	d->a = a;
+	d->b = b;
+	d->c = c;
+	d->colour = colour;
+
+	solidTriangles.push_back(d);
+	updateSolidTriangle = true;
+
+	return d;
+}
+
+void RenderJob::removeSolidTriangle(SolidTriangleData* data) {
+	solidTriangles.remove(data);
+
+	delete data;
+	updateSolidTriangle = true;
+}
+
+mat3* RenderJob::getCameraMatrix() {
+	return &matrix;
+}
+
+void RenderJob::remakeSolidTriangleBuffer() {
+	//TODO use mapped buffers
+	GLfloat data[solidTriangles.size() * solidTriangle::DATA_SIZE_FLOAT];
+
+	std::list<SolidTriangleData*>::const_iterator iterator;
+	int i = 0;
+	for(iterator = solidTriangles.begin(); iterator != solidTriangles.end(); ++iterator) {
+		//vert 1
+		data[i++] = (*iterator)->a.x;
+		data[i++] = (*iterator)->a.y;
+
+		data[i++] = (*iterator)->colour.r;
+		data[i++] = (*iterator)->colour.g;
+		data[i++] = (*iterator)->colour.b;
+		data[i++] = (*iterator)->colour.a;
+
+		//vert 2
+		data[i++] = (*iterator)->b.x;
+		data[i++] = (*iterator)->b.y;
+
+		data[i++] = (*iterator)->colour.r;
+		data[i++] = (*iterator)->colour.g;
+		data[i++] = (*iterator)->colour.b;
+		data[i++] = (*iterator)->colour.a;
+
+		//vert 3
+		data[i++] = (*iterator)->c.x;
+		data[i++] = (*iterator)->c.y;
+
+		data[i++] = (*iterator)->colour.r;
+		data[i++] = (*iterator)->colour.g;
+		data[i++] = (*iterator)->colour.b;
+		data[i++] = (*iterator)->colour.a;
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, solidTriangle::vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+
+	updateSolidTriangle = false;
+}
+
+/** Draws the current queue onto the currently bound framebuffer */
+void RenderJob::draw() {
+	updateCamera();
+
+	if(solidTriangles.size() != 0)
+		drawSolidTriangles();
+
+	if(lines.size() != 0)
+		drawLines();
+
+	if(totalTexturedSize() != 0)
+		drawTexturedTriangles();
+
+	if(letters != 0)
+		drawText();
+}
+
+void RenderJob::drawSolidTriangles() {
+	if(updateSolidTriangle)
+		remakeSolidTriangleBuffer();
+
+	glBindVertexArray(solidTriangle::vao);
+	glUseProgram(solidTriangle::program);
+	glDrawArrays(GL_TRIANGLES, 0, solidTriangles.size() * 3);
+}
+
+int RenderJob::totalTexturedSize() {
+	int acc = 0;
+	for(auto l : texturedTriangles) {
+		acc += l.second.size();
+	}
+
+	return acc;
+}
+
+RenderJob::TexturedTriangleData* RenderJob::addTexturedTriangle(vec2 a, vec2 b, vec2 c, vec2 p, vec2 q, vec2 r, int texture) {
+	if(texturedTriangles.find(texture) == texturedTriangles.end()) {
+		texturedTriangles[texture] = list<TexturedTriangleData*>();
+	}
+
+	TexturedTriangleData* d = new TexturedTriangleData;
+	d->a = a;
+	d->b = b;
+	d->c = c;
+	d->p = p;
+	d->q = q;
+	d->r = r;
+	d->texture = texture;
+
+	texturedTriangles[texture].push_back(d);
+
+	updateTexturedTriangle = true;
+
+	return d;
+}
+
+void RenderJob::removeTexturedTriangle(TexturedTriangleData* data) {
+	texturedTriangles[data->texture].remove(data);
+
+	delete data;
+
+	updateTexturedTriangle = true;
+}
+
+void RenderJob::remakeTexturedTriangleBuffer() {
+	int size = totalTexturedSize();
+
+	//TODO use mapped buffers
+	GLfloat data[size * texturedTriangle::DATA_SIZE_FLOAT];
+
+	for(auto l1 : texturedTriangles) {
+		int i = 0;
+		for(auto l2 : l1.second) {
+			//vert 1
+			data[i++] = l2->a.x;
+			data[i++] = l2->a.y;
+
+			data[i++] = l2->p.s;
+			data[i++] = l2->p.t;
+
+			//vert 2
+			data[i++] = l2->b.x;
+			data[i++] = l2->b.y;
+
+			data[i++] = l2->q.s;
+			data[i++] = l2->q.t;
+
+			//vert 2
+			data[i++] = l2->c.x;
+			data[i++] = l2->c.y;
+
+			data[i++] = l2->r.s;
+			data[i++] = l2->r.t;
+		}
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, texturedTriangle::vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+
+	updateTexturedTriangle = false;
+}
+
+void RenderJob::drawTexturedTriangles() {
+	if(updateTexturedTriangle)
+		remakeTexturedTriangleBuffer();
+
+	glBindVertexArray(texturedTriangle::vao);
+	glUseProgram(texturedTriangle::program);
+
+	int acc = 0;
+	for(auto i : texturedTriangles) {
+		if(i.second.size() == 0)
+			continue;
+
+		glUniform1i(render::texture_sampler, i.first);
+		glDrawArrays(GL_TRIANGLES, acc, i.second.size() * 3);
+		acc += i.second.size();
+	}
+}
+
+RenderJob::TextData* RenderJob::addText(vec2 pos, vec4 colour, float size, string text, int image) {
+	if(textJobs.find(image) == textJobs.end()) {
+		textJobs[image] = list<TextData*>();
+	}
+
+	TextData* d = new TextData;
+	d->pos = pos;
+	d->colour = colour;
+	d->size = size;
+	d->text = text.c_str();
+	d->image = image;
+	d->length = text.length();
+
+	letters += d->length;
+
+	textJobs[image].push_back(d);
+
+	updateText = true;
+
+	return d;
+}
+
+void RenderJob::removeText(TextData* data) {
+	letters -= data->length;
+
+	textJobs[data->image].remove(data);
+
+	delete data;
+
+	updateText = true;
+}
+
+void RenderJob::remakeTextBuffer() {
+	//TODO use mapped buffers
+	GLfloat data[letters * text::DATA_SIZE_FLOAT];
+
+	int i = 0;
+
+	for(auto texture : textJobs) {
+		for(auto line : texture.second) {
+			int q = 0;
+			for(char& c : line->text) {
+				((int*) data)[i++] = text::getCharCode(c);
+
+				data[i++] = line->pos.x + line->size * q++ * text::WIDTH_SCALE; //this assumes unispace font
+				data[i++] = line->pos.y;
+
+				data[i++] = line->colour.r;
+				data[i++] = line->colour.g;
+				data[i++] = line->colour.b;
+				data[i++] = line->colour.a;
+
+				data[i++] = line->size;
+			}
+		}
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, text::vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+
+	updateText = false;
+}
+
+void RenderJob::drawText() {
+	if(updateText)
+		remakeTextBuffer();
+
+	glBindVertexArray(text::vao);
+	glUseProgram(text::program);
+
+	int acc = 0;
+	for(auto texture : textJobs) {
+		if(texture.second.size() == 0)
+			continue;
+
+		glUniform1i(render::text_sampler, texture.first);
+		int f = text::getLetterLength(texture.second);
+		glDrawArraysInstanced(GL_TRIANGLES, acc, 6, f);
+		acc += f;
+	}
+}
+
+RenderJob::LineData* RenderJob::addLine(vec2 a, vec2 b, vec4 colour) {
+	LineData* d = new LineData;
+	d->a = a;
+	d->b = b;
+	d->colour = colour;
+
+	lines.push_front(d);
+
+	updateLine = true;
+	return d;
+}
+
+void RenderJob::removeLine(LineData* data) {
+	lines.remove(data);
+
+	delete data;
+
+	updateLine = true;
+}
+
+void RenderJob::remakeLineBuffer() {
+	//TODO use mapped buffers
+	GLfloat data[lines.size() * line::DATA_SIZE_FLOAT];
+
+	int i = 0;
+	list<LineData*>::const_iterator iterator;
+	for(iterator = lines.begin(); iterator != lines.end(); ++iterator) {
+		//vert 1
+		data[i++] = (*iterator)->a.x;
+		data[i++] = (*iterator)->a.y;
+
+		data[i++] = (*iterator)->colour.r;
+		data[i++] = (*iterator)->colour.g;
+		data[i++] = (*iterator)->colour.b;
+		data[i++] = (*iterator)->colour.a;
+
+		//vert 2
+		data[i++] = (*iterator)->b.x;
+		data[i++] = (*iterator)->b.y;
+
+		data[i++] = (*iterator)->colour.r;
+		data[i++] = (*iterator)->colour.g;
+		data[i++] = (*iterator)->colour.b;
+		data[i++] = (*iterator)->colour.a;
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, line::vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+
+	updateLine = false;
+}
+
+void RenderJob::drawLines() {
+	if(updateLine)
+		remakeLineBuffer();
+
+	glBindVertexArray(line::vao);
+	glUseProgram(line::program);
+	glDrawArrays(GL_LINES, 0, lines.size() * 2);
+}
+
+void RenderJob::updateCamera() {
+	glUseProgram(texturedTriangle::program);
+	glUniformMatrix3fv(render::texture_mat, 1, GL_FALSE, &matrix[0][0]);
+
+	glUseProgram(text::program);
+	glUniformMatrix3fv(render::text_mat, 1, GL_FALSE, &matrix[0][0]);
+
+	glUseProgram(line::program);
+	glUniformMatrix3fv(render::colour_mat, 1, GL_FALSE, &matrix[0][0]);
 }
