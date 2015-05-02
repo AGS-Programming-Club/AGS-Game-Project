@@ -11,23 +11,6 @@
 using namespace std;
 using namespace glm;
 
-void w() {
-	render::getCameraPos()->y -= 0.001;
-	render::updateCamera();
-}
-void a() {
-	render::getCameraPos()->x += 0.001;
-	render::updateCamera();
-}
-void s() {
-	render::getCameraPos()->y += 0.001;
-	render::updateCamera();
-}
-void d() {
-	render::getCameraPos()->x -= 0.001;
-	render::updateCamera();
-}
-
 void innit() {
 	render::init(3, 3, 4, "AGS Programing Group", false);
 	glfwSwapInterval(1);
@@ -35,18 +18,6 @@ void innit() {
 
 	GLuint image = image::loadBMP("courier");
 	texture::bind(image, 0);
-
-	keybinds::add(w, GLFW_KEY_W, KEY_DOWN);
-	keybinds::add(a, GLFW_KEY_A, KEY_DOWN);
-	keybinds::add(s, GLFW_KEY_S, KEY_DOWN);
-	keybinds::add(d, GLFW_KEY_D, KEY_DOWN);
-
-	texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
-	solidTriangle::add(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec4(0.5, 1, 0.5, 1));
-
-	text::add(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "abcd TEXT text Texty text", 0);
-
-	line::add(vec2(-0.5, 0), vec2(0.5, 0), vec4(1, 0.5, 0.5, 1));
 }
 
 namespace fps {
