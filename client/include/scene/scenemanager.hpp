@@ -15,9 +15,9 @@ private:
 	
 	static std::vector<Scene*> scenes;
 	
-	static std::string currentSceneName;
+	static std::vector<std::string> currentSceneNames;
 	
-	static Scene* currentScene;
+	static std::vector<Scene*> currentScenes;
 	
 public:
 
@@ -32,11 +32,15 @@ public:
 	 * @param sceneName The name of the Scene generated, used to reference a Scene in other methods. May not be an empty string or have been defined previously. */
 	static void defineScene(std::string sceneName, Scene* scene);
 	
-	/** Changes the current Scene.
-	 * @param sceneName The name of the Scene to use. The Scene name must be previously defined. */
-	static void changeScene(std::string sceneName);
+	/** Starts a designated scene.
+	 * @param sceneName The name of the Scene to use. The Scene name must be previously defined, and not already started. */
+	static void startScene(std::string sceneName);
 	
-	/** Updates the current Scene. */
+	/** Stops a designated scene.
+	 * @param sceneName The name of the Scene to use. The Scene name must be previously defined, and not currently running. */
+	static void stopScene(std::string sceneName);
+	
+	/** Updates the current Scenes. */
 	static void update();
 	
 };

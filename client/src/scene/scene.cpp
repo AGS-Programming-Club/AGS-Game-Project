@@ -11,5 +11,13 @@
 #include "scene/scene.hpp"
 
 Scene::Scene() {
-	
+	running = false;
+}
+
+bool Scene::isRunning() {
+	return Scene::running;
+}
+
+void Scene::setRunning(bool running) {
+	Scene::running = running;
 }

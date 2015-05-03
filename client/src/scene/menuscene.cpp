@@ -44,5 +44,6 @@ void MenuScene::update() {
 }
 
 void spacePressed() {
-	SceneManager::changeScene("Game");
+	SceneManager::stopScene("Menu");
+	SceneManager::startScene("Game");
 }

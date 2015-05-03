@@ -8,6 +8,7 @@
 #include "render/renderer.hpp"
 #include "render/texture.hpp"
 #include "scene/scenemanager.hpp"
+#include "scene/debugoverlayscene.hpp"
 #include "scene/gamescene.hpp"
 #include "scene/menuscene.hpp"
 
@@ -23,12 +24,12 @@ void init() {
 	GLuint image = image::loadBMP("courier");
 	texture::bind(image, 0);
 	
+	SceneManager::defineScene("DebugOverlay", new DebugOverlayScene());
 	SceneManager::defineScene("Game", new GameScene());
 	SceneManager::defineScene("Menu", new MenuScene());
 	
-	// comment the following as appropriate if you want to see the menu screen (just a placeholder for now)
-	SceneManager::changeScene("Menu");
-	//SceneManager::changeScene("Game");
+	SceneManager::startScene("DebugOverlay");
+	SceneManager::startScene("Menu");
 }
 
 namespace fps {

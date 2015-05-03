@@ -14,8 +14,8 @@
 bool SceneManager::debug;
 std::vector<std::string> SceneManager::sceneNames;
 std::vector<Scene*> SceneManager::scenes;
-std::string SceneManager::currentSceneName;
-Scene* SceneManager::currentScene;
+std::vector<std::string> SceneManager::currentSceneNames;
+std::vector<Scene*> SceneManager::currentScenes;
 
 SceneManager::SceneManager() {
 	log(ERROR, "Don't instantiate this class.");
@@ -29,7 +29,8 @@ void SceneManager::init(bool debug) {
 	SceneManager::debug = debug;
 	sceneNames.clear();
 	scenes.clear();
-	currentSceneName = "";
+	currentScenes.clear();
+	currentSceneNames.clear();
 }
 
 void SceneManager::defineScene(std::string sceneName, Scene* scene) {
@@ -59,27 +60,7 @@ void SceneManager::defineScene(std::string sceneName, Scene* scene) {
 	scenes.push_back(scene);
 }
 
-void SceneManager::changeScene(std::string sceneName) {
-	if (debug) {
-		if (currentSceneName == "") {
-			log(INFO, "Changing Scene to: " + sceneName);
-		} else {
-			log(INFO, "Changing Scene from: " + currentSceneName + " to: " + sceneName);
-		}
-	}
-	
-	if (currentSceneName == sceneName) {
-		log(ERROR, sceneName + " is already the currently set Scene.");
-		return;
-	}
-	
-	if (currentSceneName != "" && currentScene != NULL) {
-		currentScene->dispose();
-		if (debug) {
-			log(INFO, "Disposed old Scene: " + currentSceneName);
-		}
-	}
-	
+void SceneManager::startScene(std::string sceneName) {
 	int desiredIndex = -1;
 	int i;
 	for (i = 0; desiredIndex == -1 && i < sceneNames.size(); i++) {
@@ -88,18 +69,67 @@ void SceneManager::changeScene(std::string sceneName) {
 		}
 	}
 	
-	if (desiredIndex != -1) {
-		currentSceneName = sceneName;
-		currentScene = scenes[desiredIndex];
-		currentScene->init();
-	} else {
-		log(ERROR, "Invalid `sceneName` passed to `SceneManager::changeScene`.");
+	if (desiredIndex == -1) {
+		log(ERROR, "No such Scene exists.");
 		return;
+	} else if (scenes[desiredIndex]->isRunning()) {
+		log(ERROR, "Scene: " + sceneName + " is already running.");
+		return;
+	}
+	
+	if (debug) {
+		log(INFO, "Starting Scene: " + sceneName);
+	}
+	
+	scenes[desiredIndex]->setRunning(true);
+	scenes[desiredIndex]->init();
+	
+	currentScenes.push_back(scenes[desiredIndex]);
+	currentSceneNames.push_back(sceneName);
+}
+
+void SceneManager::stopScene(std::string sceneName) {
+	int desiredIndex = -1;
+	int i;
+	for (i = 0; desiredIndex == -1 && i < sceneNames.size(); i++) {
+		if (sceneName == sceneNames[i]) {
+			desiredIndex = i;
+		}
+	}
+	
+	if (desiredIndex == -1) {
+		log(ERROR, "No such Scene exists.");
+		return;
+	} else if (!scenes[desiredIndex]->isRunning()) {
+		log(ERROR, "Scene: " + sceneName + " isn't running.");
+		return;
+	}
+	
+	if (debug) {
+		log(INFO, "Stopping Scene: " + sceneName);
+	}
+	
+	scenes[desiredIndex]->setRunning(false);
+	scenes[desiredIndex]->dispose();
+	
+	desiredIndex = -1;
+	for (i = 0; desiredIndex == -1 && i < currentSceneNames.size(); i++) {
+		if (sceneName == currentSceneNames[i]) {
+			desiredIndex = i;
+		}
+	}
+	
+	if (desiredIndex == -1) {
+		log(ERROR, "This should never happen.");
+	} else {
+		currentScenes.erase(currentScenes.begin() + desiredIndex - 1);
+		currentSceneNames.erase(currentSceneNames.begin() + desiredIndex - 1);
 	}
 }
 
 void SceneManager::update() {
-	if (currentSceneName != "" && currentScene != NULL) {
-		currentScene->update();
+	int i;
+	for (i = 0; i < currentScenes.size(); i++) {
+		currentScenes[i]->update();
 	}
 }

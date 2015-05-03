@@ -4,6 +4,8 @@
 class Scene {
 private:
 	
+	bool running;
+	
 public:
 	/** Default constructor. Don't implement this method, use `init()` instead. */
 	Scene();
@@ -16,6 +18,12 @@ public:
 	
 	/** Updates the Scene. Called by SceneManager each time it is updated. */
 	virtual void update() = 0;
+	
+	/** Returns whether or not this scene is currently running. */
+	bool isRunning();
+	
+	/** Changes whether or not this scene is currently considered running. */
+	void setRunning(bool running);
 };
 
 #endif
