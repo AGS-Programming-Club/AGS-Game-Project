@@ -18,14 +18,17 @@ using namespace glm;
 
 void spacePressed();
 
-text::Data* menuText;
+RenderJob::TextData* menuText;
+RenderJob* ui;
 
 void MenuScene::init() {
 	log(INFO, "Initializing MenuScene");
 	
+	ui = render::getUIJob();
+
 	keybinds::add(spacePressed, GLFW_KEY_SPACE, KEY_DOWN);
 	
-	menuText = text::add(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "Press space to continue", 0);
+	menuText = ui->addText(vec2(-1, 0), vec4(1, 1, 1, 1), 0.1, "Press space to continue", 0);
 }
 
 void MenuScene::dispose() {
@@ -33,7 +36,7 @@ void MenuScene::dispose() {
 	
 	keybinds::remove(spacePressed, GLFW_KEY_SPACE, KEY_DOWN);
 	
-	text::remove(menuText);
+	ui->removeText(menuText);
 }
 
 void MenuScene::update() {

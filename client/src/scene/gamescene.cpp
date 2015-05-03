@@ -20,10 +20,11 @@ void a();
 void s();
 void d();
 
-texturedTriangle::Data* triangle1;
-solidTriangle::Data* triangle2;
-text::Data* text1;
-line::Data* line1;
+RenderJob::TexturedTriangleData* triangle1;
+RenderJob::SolidTriangleData* triangle2;
+RenderJob::TextData* text1;
+RenderJob::LineData* line1;
+RenderJob* job;
 
 void GameScene::init() {
 	log(INFO, "Initializing GameScene");
@@ -33,10 +34,12 @@ void GameScene::init() {
 	keybinds::add(s, GLFW_KEY_S, KEY_DOWN);
 	keybinds::add(d, GLFW_KEY_D, KEY_DOWN);
 	
-	triangle1 = texturedTriangle::add(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
-	triangle2 = solidTriangle::add(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec4(0.5, 1, 0.5, 1));
-	text1 = text::add(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "abcd TEXT text Texty text", 0);
-	line1 = line::add(vec2(-0.5, 0), vec2(0.5, 0), vec4(1, 0.5, 0.5, 1));
+	job = render::getWorldJob();
+
+	triangle1 = job->addTexturedTriangle(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
+	triangle2 = job->addSolidTriangle(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec4(0.5, 1, 0.5, 1));
+	text1 = job->addText(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "abcd TEXT text Texty text", 0);
+	line1 = job->addLine(vec2(-0.5, 0), vec2(0.5, 0), vec4(1, 0.5, 0.5, 1));
 }
 
 void GameScene::dispose() {
@@ -47,10 +50,10 @@ void GameScene::dispose() {
 	keybinds::remove(s, GLFW_KEY_S, KEY_DOWN);
 	keybinds::remove(d, GLFW_KEY_D, KEY_DOWN);
 	
-	texturedTriangle::remove(triangle1);
-	solidTriangle::remove(triangle2);
-	text::remove(text1);
-	line::remove(line1);
+	job->removeTexturedTriangle(triangle1);
+	job->removeSolidTriangle(triangle2);
+	job->removeText(text1);
+	job->removeLine(line1);
 }
 
 void GameScene::update() {
@@ -58,21 +61,17 @@ void GameScene::update() {
 }
 
 void w() {
-	render::getCameraPos()->y -= 0.001;
-	render::updateCamera();
+	job->getCameraMatrix()[2].y += 0.001;
 }
 
 void a() {
-	render::getCameraPos()->x += 0.001;
-	render::updateCamera();
+	job->getCameraMatrix()[2].x -= 0.001;
 }
 
 void s() {
-	render::getCameraPos()->y += 0.001;
-	render::updateCamera();
+	job->getCameraMatrix()[2].y -= 0.001;
 }
 
 void d() {
-	render::getCameraPos()->x -= 0.001;
-	render::updateCamera();
+	job->getCameraMatrix()[2].x += 0.001;
 }
