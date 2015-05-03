@@ -381,8 +381,8 @@ void RenderJob::removeSolidTriangle(SolidTriangleData* data) {
 	updateSolidTriangle = true;
 }
 
-mat3* RenderJob::getCameraMatrix() {
-	return &matrix;
+mat3& RenderJob::getCameraMatrix() {
+	return matrix;
 }
 
 void RenderJob::remakeSolidTriangleBuffer() {

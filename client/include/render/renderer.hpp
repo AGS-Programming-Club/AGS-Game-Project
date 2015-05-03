@@ -102,7 +102,7 @@ class RenderJob {
 		/** @returns the matrix used for camera transformations, if you change the value it will update automatically
 		 * on the GPU.
 		 **/
-		glm::mat3* getCameraMatrix();
+		glm::mat3& getCameraMatrix();
 
 		/** Adds a static solid flat shaded triangle to the renderer queue
 		 *
