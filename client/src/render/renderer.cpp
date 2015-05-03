@@ -148,12 +148,10 @@ namespace text {
 		return (int) c - 32;
 	}
 
-	const float WIDTH_SCALE = 0.5;
-
 	int getLetterLength(list<RenderJob::TextData*> texture) {
 		int acc = 0;
 		for(auto line : texture) {
-			acc += line->text.length();
+			acc += line->length;
 		}
 
 		return acc;
@@ -552,12 +550,28 @@ RenderJob::TextData* RenderJob::addText(vec2 pos, vec4 colour, float size, strin
 	}
 
 	TextData* d = new TextData;
-	d->pos = pos;
-	d->colour = colour;
-	d->size = size;
-	d->text = text.c_str();
-	d->image = image;
+	d->supply = new StringLetterSupplier{size, size * 0.5f, size, colour, pos, text};
 	d->length = text.length();
+	d->image = image;
+
+	letters += d->length;
+
+	textJobs[image].push_back(d);
+
+	updateText = true;
+
+	return d;
+}
+
+RenderJob::TextData* RenderJob::addText(LetterSupplier* supply, int image, int length) {
+	if(textJobs.find(image) == textJobs.end()) {
+		textJobs[image] = list<TextData*>();
+	}
+
+	TextData* d = new TextData;
+	d->supply = supply;
+	d->length = length;
+	d->image = image;
 
 	letters += d->length;
 
@@ -573,6 +587,7 @@ void RenderJob::removeText(TextData* data) {
 
 	textJobs[data->image].remove(data);
 
+	delete data->supply;
 	delete data;
 
 	updateText = true;
@@ -587,18 +602,20 @@ void RenderJob::remakeTextBuffer() {
 	for(auto texture : textJobs) {
 		for(auto line : texture.second) {
 			int q = 0;
-			for(char& c : line->text) {
-				((int*) data)[i++] = text::getCharCode(c);
+			LetterSupplier::Letter letter;
+			for(int q = 0; q < line->length; q++) {
+				letter = line->supply->next(q == 0 ? NULL : &letter, q);
+				((int*) data)[i++] = text::getCharCode(letter.charcode);
 
-				data[i++] = line->pos.x + line->size * q++ * text::WIDTH_SCALE; //this assumes unispace font
-				data[i++] = line->pos.y;
+				data[i++] = letter.pos.x;
+				data[i++] = letter.pos.y;
 
-				data[i++] = line->colour.r;
-				data[i++] = line->colour.g;
-				data[i++] = line->colour.b;
-				data[i++] = line->colour.a;
+				data[i++] = letter.colour.r;
+				data[i++] = letter.colour.g;
+				data[i++] = letter.colour.b;
+				data[i++] = letter.colour.a;
 
-				data[i++] = line->size;
+				data[i++] = letter.scale;
 			}
 		}
 	}
@@ -698,4 +715,45 @@ void RenderJob::updateCamera() {
 
 	glUseProgram(line::program);
 	glUniformMatrix3fv(render::colour_mat, 1, GL_FALSE, &matrix[0][0]);
+}
+
+LetterSupplier::Letter StringLetterSupplier::next(Letter* previous, int index) {
+	Letter letter;
+
+	if(index >= text.length()) {
+		letter.charcode = ' ';
+	} else {
+		letter.charcode = text.at(index);
+	}
+
+	letter.colour = colour;
+
+	if(previous != NULL) {
+		vec2 oldPos = previous->pos;
+		switch(letter.charcode) {
+			case '\t':
+				letter.pos = vec2(oldPos.x + 3 * width, oldPos.y);
+				break;
+			case '\n':
+				letter.pos = vec2(startPos.x - width, oldPos.y - height);
+				break;
+			default:
+				letter.pos = vec2(oldPos.x + width, oldPos.y);
+		}
+	} else {
+		letter.pos = startPos;
+	}
+
+	letter.scale = scale;
+
+	return letter;
+}
+
+StringLetterSupplier::StringLetterSupplier(float height, float width, float scale, glm::vec4 colour, glm::vec2 startPos, std::string text) {
+	this->height = height;
+	this->width = width;
+	this->scale = scale;
+	this->colour = colour;
+	this->startPos = startPos;
+	this->text = text;
 }

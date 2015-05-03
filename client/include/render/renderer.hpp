@@ -15,6 +15,31 @@
 #define LINE_STRING STRINGIZE(__LINE__)
 #define CHECK_GL() render::checkGL("GL Error " + std::string(SFILE) + "." + LINE_STRING + ": ")
 
+class LetterSupplier {
+	public:
+		struct Letter {
+			char charcode;
+			glm::vec2 pos;
+			glm::vec4 colour;
+			float scale;
+		};
+
+		virtual Letter next(Letter* previous, int index) = 0;
+};
+
+class StringLetterSupplier : public LetterSupplier {
+	public:
+		std::string text;
+		glm::vec4 colour;
+		glm::vec2 startPos;
+		float height;
+		float width;
+		float scale;
+
+		StringLetterSupplier(float height, float width, float scale, glm::vec4 colour, glm::vec2 startPos, std::string text);
+		Letter next(Letter* previous, int index);
+};
+
 class RenderJob {
 	public:
 		struct SolidTriangleData {
@@ -43,12 +68,9 @@ class RenderJob {
 		};
 
 		struct TextData {
-			glm::vec2 pos;
-			glm::vec4 colour;
-			float size;
-			std::string text;
 			int length;
 			int image;
+			LetterSupplier* supply;
 		};
 
 	private:
@@ -145,6 +167,11 @@ class RenderJob {
 		 * @param text the string to be rendererd, NB: carrabge returns and tabbs are not yet supported
 		 * @param image The image index that the text bitmap was loaded into, @see texture::bind()*/
 		TextData* addText(glm::vec2 pos, glm::vec4 colour, float size, std::string text, int image);
+
+		/** Adds a text job to the renderer using a letter supplier, this 'should' be cleaned up when the text job
+		 * is deleted but it may not due to destructor things.
+		 **/
+		TextData* addText(LetterSupplier* supply, int image, int length);
 
 		/** Removes a text job via the handle returned in @see text::add
 		 * @param the data returned from @see text::add */
