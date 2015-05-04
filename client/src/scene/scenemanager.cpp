@@ -122,8 +122,8 @@ void SceneManager::stopScene(std::string sceneName) {
 	if (desiredIndex == -1) {
 		log(ERROR, "This should never happen.");
 	} else {
-		currentScenes.erase(currentScenes.begin() + desiredIndex - 1);
-		currentSceneNames.erase(currentSceneNames.begin() + desiredIndex - 1);
+		currentScenes.erase(currentScenes.begin() + desiredIndex);
+		currentSceneNames.erase(currentSceneNames.begin() + desiredIndex);
 	}
 }
 
