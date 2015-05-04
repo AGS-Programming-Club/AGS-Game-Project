@@ -294,7 +294,7 @@ namespace render {
 		CHECK_GL();
 
 		ui = createRenderJob();
-		//world = createRenderJob();
+		world = createRenderJob();
 	}
 
 	void draw() {
