@@ -29,13 +29,9 @@ namespace render {
 namespace solidTriangle {
 	int DATA_SIZE_FLOAT = 18;
 
-	GLuint vao;
-	GLuint vbo;
 	GLuint program;
 
-	void init() {
-		glGenVertexArrays(1, &vao);
-		glGenBuffers(1, &vbo);
+	void init(GLuint vbo, GLuint vao) {
 		glBindVertexArray(vao);
 
 		glEnableVertexAttribArray(0); //used for position
@@ -48,8 +44,6 @@ namespace solidTriangle {
 	}
 
 	void clean() {
-		glDeleteBuffers(1, &vbo);
-		glDeleteVertexArrays(1, &vao);
 		//glDeleteProgram(program); removed so the the solid colour program is not deleted twice
 	}
 }
@@ -58,13 +52,9 @@ namespace solidTriangle {
 namespace texturedTriangle {
 	int DATA_SIZE_FLOAT = 12;
 
-	GLuint vao;
-	GLuint vbo;
 	GLuint program = 0;
 
-	void init() {
-		glGenVertexArrays(1, &vao);
-		glGenBuffers(1, &vbo);
+	void init(GLuint vbo, GLuint vao) {
 		glBindVertexArray(vao);
 
 		glEnableVertexAttribArray(0); //used for position
@@ -77,8 +67,6 @@ namespace texturedTriangle {
 	}
 
 	void clean() {
-		glDeleteBuffers(1, &vbo);
-		glDeleteVertexArrays(1, &vao);
 		glDeleteProgram(program);
 	}
 }
@@ -92,8 +80,6 @@ namespace text {
 
 	int DATA_SIZE_FLOAT = 8;
 
-	GLuint vao;
-	GLuint vbo;
 	GLuint staticVbo;
 	GLuint program = 0;
 
@@ -108,10 +94,13 @@ namespace text {
 			0, 0,
 	};
 
-	void init() {
-		glGenVertexArrays(1, &vao);
-		glGenBuffers(1, &vbo);
+	void initStaticBuffer() {
 		glGenBuffers(1, &staticVbo);
+		glBindBuffer(GL_ARRAY_BUFFER, staticVbo);
+		glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), vertexs, GL_STATIC_DRAW);
+	}
+
+	void init(GLuint vao, GLuint vbo) {
 		glBindVertexArray(vao);
 
 		glEnableVertexAttribArray(0); //used for position of vertexs
@@ -122,7 +111,6 @@ namespace text {
 		glEnableVertexAttribArray(4); //used for the size of the font
 
 		glBindBuffer(GL_ARRAY_BUFFER, staticVbo);
-		glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), vertexs, GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*) 0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -138,9 +126,7 @@ namespace text {
 	}
 
 	void clean() {
-		glDeleteBuffers(1, &vbo);
 		glDeleteBuffers(1, &staticVbo);
-		glDeleteVertexArrays(1, &vao);
 		glDeleteProgram(program);
 	}
 
@@ -162,13 +148,9 @@ namespace text {
 namespace line {
 	const int DATA_SIZE_FLOAT = 12;
 
-	GLuint vao;
-	GLuint vbo;
 	GLuint program = 0;
 
-	void init() {
-		glGenVertexArrays(1, &vao);
-		glGenBuffers(1, &vbo);
+	void init(GLuint vao, GLuint vbo) {
 		glBindVertexArray(vao);
 
 		glEnableVertexAttribArray(0); //used for position
@@ -181,8 +163,6 @@ namespace line {
 	}
 
 	void clean() {
-		glDeleteBuffers(1, &vbo);
-		glDeleteVertexArrays(1, &vao);
 		glDeleteProgram(program);
 	}
 }
@@ -309,13 +289,12 @@ namespace render {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		line::init();
-		solidTriangle::init();
-		texturedTriangle::init();
-		text::init();
+		text::initStaticBuffer();
+
+		CHECK_GL();
 
 		ui = createRenderJob();
-		world = createRenderJob();
+		//world = createRenderJob();
 	}
 
 	void draw() {
@@ -418,7 +397,7 @@ void RenderJob::remakeSolidTriangleBuffer() {
 		data[i++] = (*iterator)->colour.a;
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, solidTriangle::vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, solidTriangleVbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
 
 	updateSolidTriangle = false;
@@ -445,7 +424,7 @@ void RenderJob::drawSolidTriangles() {
 	if(updateSolidTriangle)
 		remakeSolidTriangleBuffer();
 
-	glBindVertexArray(solidTriangle::vao);
+	glBindVertexArray(solidTriangleVao);
 	glUseProgram(solidTriangle::program);
 	glDrawArrays(GL_TRIANGLES, 0, solidTriangles.size() * 3);
 }
@@ -520,7 +499,7 @@ void RenderJob::remakeTexturedTriangleBuffer() {
 		}
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, texturedTriangle::vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, texturedTriangleVbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
 
 	updateTexturedTriangle = false;
@@ -530,7 +509,7 @@ void RenderJob::drawTexturedTriangles() {
 	if(updateTexturedTriangle)
 		remakeTexturedTriangleBuffer();
 
-	glBindVertexArray(texturedTriangle::vao);
+	glBindVertexArray(texturedTriangleVao);
 	glUseProgram(texturedTriangle::program);
 
 	int acc = 0;
@@ -620,7 +599,7 @@ void RenderJob::remakeTextBuffer() {
 		}
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, text::vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, textVbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
 
 	updateText = false;
@@ -630,7 +609,7 @@ void RenderJob::drawText() {
 	if(updateText)
 		remakeTextBuffer();
 
-	glBindVertexArray(text::vao);
+	glBindVertexArray(textVao);
 	glUseProgram(text::program);
 
 	int acc = 0;
@@ -691,7 +670,7 @@ void RenderJob::remakeLineBuffer() {
 		data[i++] = (*iterator)->colour.a;
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, line::vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, lineVbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
 
 	updateLine = false;
@@ -701,7 +680,7 @@ void RenderJob::drawLines() {
 	if(updateLine)
 		remakeLineBuffer();
 
-	glBindVertexArray(line::vao);
+	glBindVertexArray(lineVao);
 	glUseProgram(line::program);
 	glDrawArrays(GL_LINES, 0, lines.size() * 2);
 }
@@ -756,4 +735,33 @@ StringLetterSupplier::StringLetterSupplier(float height, float width, float scal
 	this->colour = colour;
 	this->startPos = startPos;
 	this->text = text;
+}
+
+RenderJob::RenderJob() {
+	letters = 0;
+	solidTriangles = std::list<SolidTriangleData*>();
+	texturedTriangles = std::map<int, std::list<TexturedTriangleData*>>();
+	textJobs = std::map<int, std::list<TextData*>>();
+	lines = std::list<LineData*>();
+
+	updateSolidTriangle = false;
+	updateTexturedTriangle = false;
+	updateText = false;
+	updateLine = false;
+
+	matrix = glm::mat3(1.0);
+
+	glGenBuffers(1, &lineVbo);
+	glGenVertexArrays(1, &lineVao);
+	glGenBuffers(1, &textVbo);
+	glGenVertexArrays(1, &textVao);
+	glGenBuffers(1, &texturedTriangleVbo);
+	glGenVertexArrays(1, &texturedTriangleVao);
+	glGenBuffers(1, &solidTriangleVbo);
+	glGenVertexArrays(1, &solidTriangleVao);
+
+	line::init(lineVao, lineVbo);
+	texturedTriangle::init(texturedTriangleVbo, texturedTriangleVao);
+	solidTriangle::init(solidTriangleVbo, solidTriangleVao);
+	text::init(textVao, textVbo);
 }

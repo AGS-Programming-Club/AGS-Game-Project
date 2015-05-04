@@ -81,6 +81,15 @@ class RenderJob {
 		bool updateText;
 		bool updateLine;
 
+		GLuint lineVbo;
+		GLuint lineVao;
+		GLuint textVbo;
+		GLuint textVao;
+		GLuint texturedTriangleVbo;
+		GLuint texturedTriangleVao;
+		GLuint solidTriangleVbo;
+		GLuint solidTriangleVao;
+
 		std::list<SolidTriangleData*> solidTriangles;
 		std::map<int, std::list<TexturedTriangleData*>> texturedTriangles;
 		std::map<int, std::list<TextData*>> textJobs;
@@ -102,19 +111,19 @@ class RenderJob {
 		int letters;
 
 	public:
-		RenderJob() {
-			letters = 0;
-			solidTriangles = std::list<SolidTriangleData*>();
-			texturedTriangles = std::map<int, std::list<TexturedTriangleData*>>();
-			textJobs = std::map<int, std::list<TextData*>>();
-			lines = std::list<LineData*>();
+		RenderJob();
 
-			updateSolidTriangle = false;
-			updateTexturedTriangle = false;
-			updateText = false;
-			updateLine = false;
+		~RenderJob() {
+			glDeleteBuffers(1, &lineVbo);
+			glDeleteBuffers(1, &textVbo);
+			glDeleteBuffers(1, &texturedTriangleVbo);
+			glDeleteBuffers(1, &solidTriangleVbo);
 
-			matrix = glm::mat3(1.0);
+			glDeleteVertexArrays(1, &lineVao);
+			glDeleteVertexArrays(1, &textVao);
+			glDeleteVertexArrays(1, &texturedTriangleVao);
+			glDeleteVertexArrays(1, &solidTriangleVao);
+
 		}
 
 		/** For internal use only, do not use.
