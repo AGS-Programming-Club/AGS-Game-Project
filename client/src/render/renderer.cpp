@@ -529,7 +529,7 @@ RenderJob::TextData* RenderJob::addText(vec2 pos, vec4 colour, float size, strin
 	}
 
 	TextData* d = new TextData;
-	d->supply = new StringLetterSupplier{size, size * 0.5f, size, colour, pos, text};
+	d->supply = new StringLetterSupplier{size, size * 0.375f, size, colour, pos, text};
 	d->length = text.length();
 	d->image = image;
 
