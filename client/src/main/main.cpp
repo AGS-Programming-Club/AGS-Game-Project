@@ -16,7 +16,7 @@ using namespace std;
 using namespace glm;
 
 void init() {
-	render::init(3, 3, 4, "AGS Programming Group", true);
+	render::init(3, 3, 4, "AGS Programming Group", false);
 	glfwSwapInterval(1);
 	keybinds::init();
 	SceneManager::init(false);
