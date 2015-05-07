@@ -25,6 +25,7 @@ class LetterSupplier {
 		};
 
 		virtual Letter next(Letter* previous, int index) = 0;
+		virtual void setText(std::string text) = 0;
 };
 
 class StringLetterSupplier : public LetterSupplier {
@@ -38,10 +39,17 @@ class StringLetterSupplier : public LetterSupplier {
 
 		StringLetterSupplier(float height, float width, float scale, glm::vec4 colour, glm::vec2 startPos, std::string text);
 		Letter next(Letter* previous, int index);
+		void setText(std::string text) {
+			this->text = text;
+		}
 };
 
 class RenderJob {
 	public:
+		/** Exposes the functionality to regenerate the opengl buffer as a tempory measure until I implement partial buffer
+		 * updates. */
+		void remakeTextBuffer();
+
 		struct SolidTriangleData {
 			glm::vec2 a;
 			glm::vec2 b;
@@ -98,7 +106,6 @@ class RenderJob {
 		void remakeSolidTriangleBuffer();
 		void remakeTexturedTriangleBuffer();
 		void remakeLineBuffer();
-		void remakeTextBuffer();
 
 		void drawSolidTriangles();
 		void drawTexturedTriangles();
