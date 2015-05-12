@@ -11,6 +11,7 @@
 #include "render/renderer.hpp"
 #include "render/texture.hpp"
 #include "scene/debugoverlayscene.hpp"
+#include "timing/timer.hpp"
 
 using namespace glm;
 using namespace std;
@@ -35,6 +36,6 @@ void DebugOverlayScene::update() {
 	static int i = 0;
 	i++;
 
-	fpsText->supply->setText("FPS: " + std::to_string(i));
+	fpsText->supply->setText("FPS: " + std::to_string(int(timing::getFrameClock().TPS())));
 	debugOverlayJob->remakeTextBuffer();
 }

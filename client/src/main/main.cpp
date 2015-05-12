@@ -1,7 +1,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-
 #include <string>
 #include "log.hpp"
 #include "inputio/keybinds.hpp"
@@ -11,12 +10,13 @@
 #include "scene/debugoverlayscene.hpp"
 #include "scene/gamescene.hpp"
 #include "scene/menuscene.hpp"
+#include "timing/timer.hpp"
 
 using namespace std;
 using namespace glm;
 
 void init() {
-	render::init(3, 3, 4, "AGS Programming Group", false);
+	render::init(3, 3, 4, "AGS Programming Group", true);
 	glfwSwapInterval(1);
 	keybinds::init();
 	SceneManager::init(false);
@@ -32,17 +32,9 @@ void init() {
 	SceneManager::startScene("Menu");
 }
 
-namespace fps {
-	double delta;
-	double lastFrame = glfwGetTime();
-}
-
 void gameLoop() {
 	do {
-		double time = glfwGetTime();
-		fps::delta = time - fps::lastFrame;
-		fps::lastFrame = time;
-
+		timing::getFrameClock().tick();
 		render::tick();
 		keybinds::poll();
 		SceneManager::update();
