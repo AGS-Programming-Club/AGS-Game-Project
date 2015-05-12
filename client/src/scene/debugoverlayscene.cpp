@@ -23,7 +23,7 @@ void DebugOverlayScene::init() {
 	log(INFO, "Initializing DebugOverlayScene");
 	
 	debugOverlayJob = render::createRenderJob();
-	fpsText = debugOverlayJob->addText(vec2(-1, 0.85), vec4(1, 1, 1, 1), 0.1, "FPS: 123", 0); // the scaling of the text seems a bit off, should be `vec2(-1, 0.9)` and `0.1` I think
+	fpsText = debugOverlayJob->addText(vec2(-1, 0.85), vec4(1, 1, 1, 1), 0.1, "FPS: 000000", 0); // the scaling of the text seems a bit off, should be `vec2(-1, 0.9)` and `0.1` I think
 }
 
 void DebugOverlayScene::dispose() {
