@@ -17,11 +17,16 @@ configure_file (
 )
 include_directories ("${PROJECT_BINARY_DIR}")
 
+option(BUILD_UNIT_TESTS "Build Unit Tests." OFF)
+if (BUILD_UNIT_TESTS)
+    enable_testing()
+endif (BUILD_UNIT_TESTS)
+
 find_package (OpenGL REQUIRED)
 find_package (GLEW REQUIRED)
 find_package (GLFW REQUIRED)
 find_package (GLM REQUIRED)
 #find_package (FreeImage REQUIRED)
-find_package (LiquidFun REQUIRED)
+find_package (GTest REQUIRED)
 
 add_subdirectory (client)
