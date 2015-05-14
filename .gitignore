@@ -8,6 +8,8 @@ cmake_install.cmake
 /bin/
 /CMakeCache.txt
 /config.h
+/test/
+/gtest/
 
 # Eclipse folders and files
 /.settings/
