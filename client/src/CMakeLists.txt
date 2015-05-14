@@ -27,7 +27,7 @@ if (WIN32)
         #        "${DESTINATION}"
         #    DEPENDS "${SOURCE}"
         #)
-    endforeach (INDEX RANGE 0 ${client_DLLS_BOUND})
+    endforeach ()
 
     #add_custom_target (client-dlls ALL DEPENDS ${client_DLLS})
 endif (WIN32)

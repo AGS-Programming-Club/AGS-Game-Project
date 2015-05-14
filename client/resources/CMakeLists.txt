@@ -1,15 +1,9 @@
-file (GLOB client_RESOURCE_FOLDERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*")
-# Don't include the CMakeLists.txt
-list (REMOVE_ITEM client_RESOURCE_FOLDERS "CMakeLists.txt")
-
+file (GLOB client_RESOURCE_FOLDERS "*")
 foreach (item IN LISTS client_RESOURCE_FOLDERS)
-    add_custom_command (
-        OUTPUT "${CMAKE_BINARY_DIR}/bin/client/${item}"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "${CMAKE_CURRENT_SOURCE_DIR}/${item}"
-            "${CMAKE_BINARY_DIR}/bin/client/${item}"
-        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${item}"
-    )
-endforeach (item IN LISTS client_RESOURCE_FOLDERS)
+    if (NOT IS_DIRECTORY ${item})
+        list (REMOVE_ITEM client_RESOURCE_FOLDERS ${item})
+    endif ()
+endforeach ()
 
-add_custom_target (client-resource ALL DEPENDS ${client_RESOURCE_FOLDERS})
+add_copy_directory_target (client-resource
+    "${CMAKE_BINARY_DIR}/bin/client" ${client_RESOURCE_FOLDERS})

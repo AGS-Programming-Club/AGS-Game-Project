@@ -10,7 +10,7 @@ foreach (src ${client_TEST_SUPPORT_SOURCE_FILES})
     if ("${src}" MATCHES ".*Tests.cpp")
         list (REMOVE_ITEM client_TEST_SUPPORT_SOURCE_FILES "${src}")
     endif ("${src}" MATCHES ".*Tests.cpp")
-endforeach (src ${client_TEST_SUPPORT_SOURCE_FILES})
+endforeach ()
 
 add_library (clienttest STATIC ${client_SOURCE_FILES} ${client_TEST_SUPPORT_SOURCE_FILES})
 
@@ -21,4 +21,7 @@ foreach (src ${client_TEST_SOURCE_FILES})
     add_executable ("${name}" "${CMAKE_CURRENT_SOURCE_DIR}/${src}")
     target_link_libraries ("${name}" clienttest ${client_LIBRARIES} ${GTEST_LIBRARIES})
     add_test ("${name}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${name}")
-endforeach (src ${client_TEST_SOURCE_FILES})
+endforeach ()
+
+add_copy_directory_target (box2d-test-baselines
+    "${RUNTIME_OUTPUT_DIRECTORY_BASE}/Box2D" "${CMAKE_CURRENT_SOURCE_DIR}/Box2D/baselines")

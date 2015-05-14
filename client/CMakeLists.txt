@@ -16,6 +16,6 @@ add_subdirectory (src)
 
 if (BUILD_UNIT_TESTS)
     add_subdirectory (test)
-endif (BUILD_UNIT_TESTS)
+endif ()
 
 add_subdirectory (resources)
