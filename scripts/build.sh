@@ -9,6 +9,7 @@ mkdir build
 cd build &&
 cmake -G"Unix Makefiles" \
       -DCMAKE_BUILD_TYPE=Debug \
+      -DBUILD_UNIT_TESTS=ON \
       .. &&
 make -j4
 popd > /dev/null

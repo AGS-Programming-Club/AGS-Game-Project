@@ -1,36 +1,13 @@
-file (GLOB_RECURSE client_HEADER_FILES "*.hpp")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/client")
+
 file (GLOB_RECURSE client_SOURCE_FILES "*.cpp")
+set (client_SOURCE_FILES ${client_SOURCE_FILES} PARENT_SCOPE)
 
-add_executable (client
-    ${client_HEADER_FILES} # Needed for eclipse
-    ${client_SOURCE_FILES}
-)
-
-
-
-# Hack around ${OPENGL_INCLUDE_DIR} being empty under Windows
-if (NOT "${OPENGL_INCLUDE_DIR}" STREQUAL "")
-    include_directories ("${OPENGL_INCLUDE_DIR}")
-endif (NOT "${OPENGL_INCLUDE_DIR}" STREQUAL "")
-target_link_libraries (client ${OPENGL_LIBRARIES})
-
-include_directories ("${GLEW_INCLUDE_DIRS}")
-target_link_libraries (client ${GLEW_LIBRARIES})
-
-include_directories ("${GLFW_INCLUDE_DIR}")
-target_link_libraries (client ${GLFW_LIBRARIES})
-
-include_directories ("${GLM_INCLUDE_DIRS}")
-
-#include_directories ("${FREEIMAGE_INCLUDE_DIR}")
-#target_link_libraries (client ${FREEIMAGE_LIBRARIES})
-
-include_directories ("${LIQUIDFUN_INCLUDE_DIR}")
-target_link_libraries (client ${LIQUIDFUN_LIBRARIES})
-
+add_executable (client ${client_SOURCE_FILES} "../main.cpp")
+target_link_libraries (client ${client_LIBRARIES})
 
 if (WIN32)
-    set (client_DLLS ${GLEW_LIBRARIES} ${GLFW_LIBRARIES} ${FREEIMAGE_LIBRARIES} ${LIQUIDFUN_LIBRARIES})
+    set (client_DLLS ${GLEW_LIBRARIES} ${GLFW_LIBRARIES})
     list (LENGTH client_DLLS client_DLLS_COUNT)
     math (EXPR client_DLLS_BOUND "${client_DLLS_COUNT} - 1")
 
@@ -50,7 +27,7 @@ if (WIN32)
         #        "${DESTINATION}"
         #    DEPENDS "${SOURCE}"
         #)
-    endforeach (INDEX RANGE 0 ${client_DLLS_BOUND})
+    endforeach ()
 
     #add_custom_target (client-dlls ALL DEPENDS ${client_DLLS})
 endif (WIN32)

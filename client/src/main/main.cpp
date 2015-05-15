@@ -15,6 +15,9 @@
 using namespace std;
 using namespace glm;
 
+namespace client {
+namespace main {
+
 void init() {
 	render::init(3, 3, 4, "AGS Programming Group", false);
 	glfwSwapInterval(1);
@@ -49,8 +52,11 @@ void cleanUp() {
 	render::clean();
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 	init();
 	gameLoop();
 	cleanUp();
 }
+
+} // namespace main
+} // namespace client

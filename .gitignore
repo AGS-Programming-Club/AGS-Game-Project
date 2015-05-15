@@ -1,3 +1,45 @@
+# =========================
+# Binary Files
+# =========================
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# External binary files
+!/external/**/*.a
+!/external/**/*.so
+!/external/**/*.dll
+
+# =========================
+# Build Files
+# =========================
+
 # Build folder
 /build/
 
@@ -5,9 +47,13 @@
 CMakeFiles/
 Makefile
 cmake_install.cmake
+CTestTestfile.cmake
 /bin/
 /CMakeCache.txt
 /config.h
+/test/
+/gtest/
+/Testing/
 
 # Eclipse folders and files
 /.settings/
