@@ -12,14 +12,19 @@ foreach (src ${client_TEST_SUPPORT_SOURCE_FILES})
     endif ("${src}" MATCHES ".*Tests.cpp")
 endforeach ()
 
-add_library (clienttest STATIC ${client_SOURCE_FILES} ${client_TEST_SUPPORT_SOURCE_FILES})
+add_library (client_test STATIC ${client_SOURCE_FILES} ${client_TEST_SUPPORT_SOURCE_FILES})
+
+set (client_test_LIBRARIES ${GTEST_LIBRARIES})
+if (LIBRT_FOUND)
+    set (client_test_LIBRARIES ${client_test_LIBRARIES} ${LIBRT_LIBRARIES})
+endif ()
 
 foreach (src ${client_TEST_SOURCE_FILES})
     get_filename_component (name "${src}" NAME_WE)
     get_filename_component (dir "${src}" DIRECTORY)
     set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY_BASE}/${dir}")
     add_executable ("${name}" "${CMAKE_CURRENT_SOURCE_DIR}/${src}")
-    target_link_libraries ("${name}" clienttest ${client_LIBRARIES} ${LIBRT_LIBRARIES} ${GTEST_LIBRARIES})
+    target_link_libraries ("${name}" client_test ${client_LIBRARIES} ${client_test_LIBRARIES})
     add_test ("${name}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${name}")
 endforeach ()
 
