@@ -19,7 +19,7 @@ foreach (src ${client_TEST_SOURCE_FILES})
     get_filename_component (dir "${src}" DIRECTORY)
     set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${RUNTIME_OUTPUT_DIRECTORY_BASE}/${dir}")
     add_executable ("${name}" "${CMAKE_CURRENT_SOURCE_DIR}/${src}")
-    target_link_libraries ("${name}" clienttest ${client_LIBRARIES} ${GTEST_LIBRARIES})
+    target_link_libraries ("${name}" clienttest ${client_LIBRARIES} ${LIBRT_LIBRARIES} ${GTEST_LIBRARIES})
     add_test ("${name}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${name}")
 endforeach ()
 

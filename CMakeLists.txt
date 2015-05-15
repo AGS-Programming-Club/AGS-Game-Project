@@ -29,5 +29,6 @@ find_package (GLFW REQUIRED)
 find_package (GLM REQUIRED)
 #find_package (FreeImage REQUIRED)
 find_package (GTest REQUIRED)
+find_package (LibRT) # For liquidfun unit tests on Linux
 
 add_subdirectory (client)
