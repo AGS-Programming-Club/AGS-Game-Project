@@ -7,7 +7,7 @@ add_executable (client ${client_SOURCE_FILES} "../main.cpp")
 target_link_libraries (client ${client_LIBRARIES})
 
 if (WIN32)
-    set (client_DLLS ${client_LIBRARIES})
+    set (client_DLLS ${GLEW_LIBRARIES} ${GLFW_LIBRARIES})
     list (LENGTH client_DLLS client_DLLS_COUNT)
     math (EXPR client_DLLS_BOUND "${client_DLLS_COUNT} - 1")
 
