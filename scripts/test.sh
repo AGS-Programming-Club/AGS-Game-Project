@@ -5,11 +5,6 @@ SCRIPT_PATH=`pwd -P`
 popd > /dev/null
 
 pushd "${SCRIPT_PATH}/.." > /dev/null
-mkdir build
-cd build &&
-cmake -G"Unix Makefiles" \
-      -DCMAKE_BUILD_TYPE=Debug \
-      -DBUILD_UNIT_TESTS=ON \
-      .. &&
-make -j4
+cd build
+ctest --output-on-failure
 popd > /dev/null

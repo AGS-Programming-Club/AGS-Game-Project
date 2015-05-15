@@ -23,7 +23,7 @@ script:
     - cd build
     - cmake -DBUILD_UNIT_TESTS=ON ../
     - make
-    - env CTEST_OUTPUT_ON_FAILURE=1 make test
+    - ctest --output-on-failure
 
 
 
