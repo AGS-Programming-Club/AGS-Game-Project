@@ -12,16 +12,24 @@ set (CMAKE_CXX_STANDARD 11)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_CXX_EXTENSIONS OFF)
 
+if (NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "Release"))
+    set (CMAKE_BUILD_TYPE "Debug" CACHE STRING "Options are: Debug Release" FORCE)
+endif ()
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions (-DDEBUG=1)
+endif ()
+
+option(BUILD_UNIT_TESTS "Build Unit Tests." OFF)
+if (BUILD_UNIT_TESTS)
+    enable_testing()
+endif ()
+
 configure_file (
     "${PROJECT_SOURCE_DIR}/config.h.in"
     "${PROJECT_BINARY_DIR}/config.h"
 )
 include_directories ("${PROJECT_BINARY_DIR}")
-
-option(BUILD_UNIT_TESTS "Build Unit Tests." OFF)
-if (BUILD_UNIT_TESTS)
-    enable_testing()
-endif (BUILD_UNIT_TESTS)
 
 find_package (OpenGL REQUIRED)
 find_package (GLEW REQUIRED)
