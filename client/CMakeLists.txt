@@ -5,7 +5,7 @@ if (NOT "${OPENGL_INCLUDE_DIR}" STREQUAL "")
     include_directories ("${OPENGL_INCLUDE_DIR}")
 endif (NOT "${OPENGL_INCLUDE_DIR}" STREQUAL "")
 include_directories ("${GLEW_INCLUDE_DIRS}")
-include_directories ("${GLFW_INCLUDE_DIR}")
+include_directories ("${GLFW_INCLUDE_DIRS}")
 include_directories ("${GLM_INCLUDE_DIRS}")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/client")

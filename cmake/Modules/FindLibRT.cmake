@@ -10,7 +10,7 @@ find_library (LIBRT_LIBRARY NAMES rt)
 
 set (LIBRT_LIBRARIES ${LIBRT_LIBRARY})
 
-include ("${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake")
+include (FindPackageHandleStandardArgs)
 find_package_handle_standard_args (LibRT
                                    REQUIRED_VARS LIBRT_LIBRARY)
 
