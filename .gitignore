@@ -45,7 +45,6 @@
 
 # CMake generated files
 CMakeFiles/
-Makefile
 cmake_install.cmake
 CTestTestfile.cmake
 /bin/
