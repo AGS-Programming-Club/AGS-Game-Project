@@ -55,6 +55,41 @@ b2WeldJoint::b2WeldJoint(const b2WeldJointDef* def)
 	m_impulse.SetZero();
 }
 
+size_t b2WeldJoint::Size() const {
+    return sizeof(b2WeldJoint);
+}
+
+void b2WeldJoint::CopyInto(b2Joint* target,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
+    CopyBaseInto(target, newBodies, newJoints, newJointEdges);
+
+    b2WeldJoint* t = (b2WeldJoint*) target;
+
+    t->m_frequencyHz = m_frequencyHz;
+    t->m_dampingRatio = m_dampingRatio;
+    t->m_bias = m_bias;
+
+    t->m_localAnchorA = m_localAnchorA;
+    t->m_localAnchorB = m_localAnchorB;
+    t->m_referenceAngle = m_referenceAngle;
+    t->m_gamma = m_gamma;
+    t->m_impulse = m_impulse;
+
+    t->m_indexA = m_indexA;
+    t->m_indexB = m_indexB;
+    t->m_rA = m_rA;
+    t->m_rB = m_rB;
+    t->m_localCenterA = m_localCenterA;
+    t->m_localCenterB = m_localCenterB;
+    t->m_invMassA = m_invMassA;
+    t->m_invMassB = m_invMassB;
+    t->m_invIA = m_invIA;
+    t->m_invIB = m_invIB;
+    t->m_mass = m_mass;
+}
+
 void b2WeldJoint::InitVelocityConstraints(const b2SolverData& data)
 {
 	m_indexA = m_bodyA->m_islandIndex;

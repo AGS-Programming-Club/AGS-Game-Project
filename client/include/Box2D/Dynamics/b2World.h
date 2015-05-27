@@ -48,6 +48,15 @@ public:
 	/// @param gravity the world gravity vector.
 	b2World(const b2Vec2& gravity);
 
+    /**
+     * Deep copy construct from another world object.
+     *
+     * NOTE: The internal allocators are not copied and
+     *       the new object uses its own internal allocators<br>
+     * NOTE: User data (pointers, listeners) is NOT copied<br>
+     */
+    b2World(const b2World* other);
+
 	/// Destruct the world. All physics entities are destroyed and all heap memory is released.
 	~b2World();
 

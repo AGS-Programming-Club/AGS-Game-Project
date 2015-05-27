@@ -23,6 +23,7 @@
 #include <Box2D/Collision/b2Collision.h>
 #include <Box2D/Collision/Shapes/b2Shape.h>
 #include <Box2D/Dynamics/b2Fixture.h>
+#include <unordered_map>
 
 class b2Body;
 class b2Contact;
@@ -186,6 +187,22 @@ protected:
 	b2Contact() : m_fixtureA(NULL), m_fixtureB(NULL) {}
 	b2Contact(b2Fixture* fixtureA, int32 indexA, b2Fixture* fixtureB, int32 indexB);
 	virtual ~b2Contact() {}
+
+    virtual size_t Size() const = 0;
+    virtual void CopyInto(b2Contact* target,
+            const std::unordered_map<b2Body*, b2Body*>& newBodies,
+            const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
+            const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+            const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
+            const std::unordered_map<b2Contact*, b2Contact*>& newContacts,
+            const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges) const = 0;
+    void CopyBaseInto(b2Contact* target,
+            const std::unordered_map<b2Body*, b2Body*>& newBodies,
+            const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
+            const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+            const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
+            const std::unordered_map<b2Contact*, b2Contact*>& newContacts,
+            const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges) const;
 
 	void Update(b2ContactListener* listener);
 

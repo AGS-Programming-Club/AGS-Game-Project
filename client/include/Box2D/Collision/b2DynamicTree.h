@@ -125,6 +125,11 @@ public:
 
 private:
 
+	friend class b2BroadPhase;
+	friend class b2World;
+
+	b2DynamicTree(const b2DynamicTree* other);
+
 	int32 AllocateNode();
 	void FreeNode(int32 node);
 

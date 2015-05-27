@@ -20,6 +20,7 @@
 #define B2_JOINT_H
 
 #include <Box2D/Common/b2Math.h>
+#include <unordered_map>
 
 class b2Body;
 class b2Joint;
@@ -160,6 +161,16 @@ protected:
 
 	b2Joint(const b2JointDef* def);
 	virtual ~b2Joint() {}
+
+	virtual size_t Size() const = 0;
+	virtual void CopyInto(b2Joint* target,
+            const std::unordered_map<b2Body*, b2Body*>& newBodies,
+            const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+            const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const = 0;
+	void CopyBaseInto(b2Joint* target,
+	        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+	        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+	        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const;
 
 	virtual void InitVelocityConstraints(const b2SolverData& data) = 0;
 	virtual void SolveVelocityConstraints(const b2SolverData& data) = 0;

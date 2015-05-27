@@ -22,6 +22,7 @@
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
+#include <Box2D/Dynamics/b2World.h>
 
 b2ContactFilter b2_defaultFilter;
 b2ContactListener b2_defaultListener;
@@ -33,6 +34,15 @@ b2ContactManager::b2ContactManager()
 	m_contactFilter = &b2_defaultFilter;
 	m_contactListener = &b2_defaultListener;
 	m_allocator = NULL;
+}
+
+b2ContactManager::b2ContactManager(const b2ContactManager* other, b2World* newWorld) :
+        m_broadPhase(&other->m_broadPhase) {
+    m_contactList = NULL; // To be filled by b2World
+    m_contactCount = other->m_contactCount;
+    m_contactFilter = other->m_contactFilter;
+    m_contactListener = other->m_contactListener;
+    m_allocator = &newWorld->m_blockAllocator;
 }
 
 void b2ContactManager::Destroy(b2Contact* c)

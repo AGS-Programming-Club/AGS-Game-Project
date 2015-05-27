@@ -38,6 +38,39 @@ b2Fixture::b2Fixture()
 	m_density = 0.0f;
 }
 
+b2Fixture::b2Fixture(const b2Fixture* other, b2World* newWorld,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
+        const std::unordered_map<b2FixtureProxy*, b2FixtureProxy*>& newFixtureProxies) {
+
+    m_density = other->m_density;
+
+    m_next = (other->m_next == NULL) ? NULL : newFixtures.at(other->m_next);
+    m_body = (other->m_body == NULL) ? NULL : newBodies.at(other->m_body);
+
+    m_shape = other->m_shape->Clone(&newWorld->m_blockAllocator);
+
+    m_friction = other->m_friction;
+    m_restitution = other->m_restitution;
+
+    int32 childCount = other->m_shape->GetChildCount();
+    // Allocation for the proxy array is done in b2World
+    m_proxies = newFixtureProxies.at(other->m_proxies);
+    memcpy(m_proxies, other->m_proxies, childCount * sizeof(b2FixtureProxy));
+    m_proxyCount = other->m_proxyCount;
+
+    m_filter = other->m_filter;
+
+    m_isSensor = other->m_isSensor;
+
+    m_userData = other->m_userData;
+
+    for (int i = 0; i < other->m_proxyCount; i++) {
+        b2FixtureProxy* proxy = m_proxies + i;
+        proxy->fixture = newFixtures.at(proxy->fixture);
+    }
+}
+
 void b2Fixture::Create(b2BlockAllocator* allocator, b2Body* body, const b2FixtureDef* def)
 {
 	m_userData = def->userData;

@@ -226,7 +226,8 @@ typedef void (*b2FreeFunction)(void* mem, void* callbackData);
 /// allocator (malloc / free).
 void b2SetAllocFreeCallbacks(b2AllocFunction allocCallback,
 							 b2FreeFunction freeCallback,
-							 void* callbackData);
+							 void* callbackData,
+							 bool skipAllocNumAssert = false);
 
 /// Set the number of calls to b2Alloc minus the number of calls to b2Free.
 /// This can be used to disable the empty heap check in

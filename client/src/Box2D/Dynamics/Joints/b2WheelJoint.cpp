@@ -74,6 +74,58 @@ b2WheelJoint::b2WheelJoint(const b2WheelJointDef* def)
 	m_ay.SetZero();
 }
 
+size_t b2WheelJoint::Size() const {
+    return sizeof(b2WheelJoint);
+}
+
+void b2WheelJoint::CopyInto(b2Joint* target,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
+    CopyBaseInto(target, newBodies, newJoints, newJointEdges);
+
+    b2WheelJoint* t = (b2WheelJoint*) target;
+
+    t->m_frequencyHz = m_frequencyHz;
+    t->m_dampingRatio = m_dampingRatio;
+
+    t->m_localAnchorA = m_localAnchorA;
+    t->m_localAnchorB = m_localAnchorB;
+    t->m_localXAxisA = m_localXAxisA;
+    t->m_localYAxisA = m_localYAxisA;
+
+    t->m_impulse = m_impulse;
+    t->m_motorImpulse = m_motorImpulse;
+    t->m_springImpulse = m_springImpulse;
+
+    t->m_maxMotorTorque = m_maxMotorTorque;
+    t->m_motorSpeed = m_motorSpeed;
+    t->m_enableMotor = m_enableMotor;
+
+    t->m_indexA = m_indexA;
+    t->m_indexB = m_indexB;
+    t->m_localCenterA = m_localCenterA;
+    t->m_localCenterB = m_localCenterB;
+    t->m_invMassA = m_invMassA;
+    t->m_invMassB = m_invMassB;
+    t->m_invIA = m_invIA;
+    t->m_invIB = m_invIB;
+
+    t->m_ax = m_ax;
+    t->m_ay = m_ay;
+    t->m_sAx = m_sAx;
+    t->m_sBx = m_sBx;
+    t->m_sAy = m_sAy;
+    t->m_sBy = m_sBy;
+
+    t->m_mass = m_mass;
+    t->m_motorMass = m_motorMass;
+    t->m_springMass = m_springMass;
+
+    t->m_bias = m_bias;
+    t->m_gamma = m_gamma;
+}
+
 void b2WheelJoint::InitVelocityConstraints(const b2SolverData& data)
 {
 	m_indexA = m_bodyA->m_islandIndex;

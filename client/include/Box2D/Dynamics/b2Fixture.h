@@ -23,6 +23,7 @@
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Collision/b2Collision.h>
 #include <Box2D/Collision/Shapes/b2Shape.h>
+#include <unordered_map>
 
 class b2BlockAllocator;
 class b2Body;
@@ -208,6 +209,10 @@ protected:
 	friend class b2ContactManager;
 
 	b2Fixture();
+	b2Fixture(const b2Fixture* other, b2World* newWorld,
+	        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+	        const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
+	        const std::unordered_map<b2FixtureProxy*, b2FixtureProxy*>& newFixtureProxies);
 
 	// We need separation create/destroy functions from the constructor/destructor because
 	// the destructor cannot access the allocator (no destructor arguments allowed by C++).

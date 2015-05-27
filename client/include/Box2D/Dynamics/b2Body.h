@@ -23,6 +23,7 @@
 #include <Box2D/Common/b2Math.h>
 #include <Box2D/Collision/Shapes/b2Shape.h>
 #include <memory>
+#include <unordered_map>
 
 class b2Fixture;
 class b2Joint;
@@ -437,6 +438,12 @@ private:
 	};
 
 	b2Body(const b2BodyDef* bd, b2World* world);
+	b2Body(const b2Body* other, b2World* newWorld,
+	        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+	        const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
+	        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+	        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
+	        const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges);
 	~b2Body();
 
 	void SynchronizeFixtures();

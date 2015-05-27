@@ -26,12 +26,14 @@ class b2ContactFilter;
 class b2ContactListener;
 class b2BlockAllocator;
 class b2ParticleSystem;
+class b2World;
 
 // Delegate of b2World.
 class b2ContactManager
 {
 public:
 	friend class b2ParticleSystem;
+	friend class b2World;
 
 	b2ContactManager();
 
@@ -50,6 +52,9 @@ public:
 	b2ContactFilter* m_contactFilter;
 	b2ContactListener* m_contactListener;
 	b2BlockAllocator* m_allocator;
+
+private:
+	b2ContactManager(const b2ContactManager* other, b2World* newWorld);
 };
 
 #endif

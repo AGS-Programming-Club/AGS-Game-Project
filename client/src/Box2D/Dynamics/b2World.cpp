@@ -34,10 +34,111 @@
 #include <Box2D/Common/b2Draw.h>
 #include <Box2D/Common/b2Timer.h>
 #include <new>
+#include <unordered_map>
 
 b2World::b2World(const b2Vec2& gravity)
 {
 	Init(gravity);
+}
+
+b2World::b2World(const b2World* other) :
+        m_contactManager(&other->m_contactManager, this) {
+    using std::make_pair;
+
+    b2Assert(!(other->m_flags & e_locked));
+
+    m_flags = other->m_flags;
+
+    m_bodyCount = other->m_bodyCount;
+    m_jointCount = other->m_jointCount;
+
+    m_gravity = other->m_gravity;
+    m_allowSleep = other->m_allowSleep;
+
+    m_destructionListener = other->m_destructionListener;
+    m_debugDraw = other->m_debugDraw;
+
+    m_inv_dt0 = other->m_inv_dt0;
+
+    m_warmStarting = other->m_warmStarting;
+    m_continuousPhysics = other->m_continuousPhysics;
+    m_subStepping = other->m_subStepping;
+
+    m_stepComplete = other->m_stepComplete;
+
+    m_profile = other->m_profile;
+
+    m_liquidFunVersion = other->m_liquidFunVersion;
+    m_liquidFunVersionString = other->m_liquidFunVersionString;
+
+    std::unordered_map<b2Body*, b2Body*> newBodies;
+    std::unordered_map<b2Fixture*, b2Fixture*> newFixtures;
+    std::unordered_map<b2FixtureProxy*, b2FixtureProxy*> newFixtureProxies;
+
+    for (b2Body* it = other->m_bodyList; it != NULL; it = it->m_next) {
+        b2Body* newBody = (b2Body*) m_blockAllocator.Allocate(sizeof(b2Body));
+        newBodies.insert(make_pair(it, newBody));
+        for (b2Fixture* jt = it->m_fixtureList; jt != NULL; jt = jt->m_next) {
+            b2Fixture* newFixture = (b2Fixture*) m_blockAllocator.Allocate(sizeof(b2Fixture));
+            newFixtures.insert(std::make_pair(jt, newFixture));
+
+            int32 childCount = jt->m_shape->GetChildCount();
+            b2FixtureProxy* proxies = (b2FixtureProxy*) m_blockAllocator.Allocate(childCount * sizeof(b2FixtureProxy));
+            for (int i = 0; i < childCount; i++) {
+                b2FixtureProxy* oldProxy = jt->m_proxies + i;
+                b2FixtureProxy* newProxy = proxies + i;
+                newFixtureProxies.insert(std::make_pair(oldProxy, newProxy));
+            }
+        }
+    }
+
+    std::unordered_map<b2Joint*, b2Joint*> newJoints;
+    std::unordered_map<b2JointEdge*, b2JointEdge*> newJointEdges;
+
+    for (b2Joint* it = other->m_jointList; it != NULL; it = it->m_next) {
+        b2Joint* newJoint = (b2Joint*) m_blockAllocator.Allocate(it->Size());
+        newJoints.insert(make_pair(it, newJoint));
+        newJointEdges.insert(make_pair(&it->m_edgeA, &newJoint->m_edgeA));
+        newJointEdges.insert(make_pair(&it->m_edgeB, &newJoint->m_edgeB));
+    }
+
+    std::unordered_map<b2Contact*, b2Contact*> newContacts;
+    std::unordered_map<b2ContactEdge*, b2ContactEdge*> newContactEdges;
+
+    for (b2Contact* it = other->m_contactManager.m_contactList; it != NULL; it = it->m_next) {
+        b2Contact* newContact = (b2Contact*) m_blockAllocator.Allocate(sizeof(b2Contact));
+        newContacts.insert(make_pair(it, newContact));
+        newContactEdges.insert(make_pair(&it->m_nodeA, &newContact->m_nodeA));
+        newContactEdges.insert(make_pair(&it->m_nodeB, &newContact->m_nodeB));
+    }
+
+    for (auto it = newBodies.begin(); it != newBodies.end(); it++) {
+        new (it->second) b2Body(it->first, this, newBodies, newFixtures, newJoints, newJointEdges, newContactEdges);
+    }
+
+    for (auto it = newFixtures.begin(); it != newFixtures.end(); it++) {
+        new (it->second) b2Fixture(it->first, this, newBodies, newFixtures, newFixtureProxies);
+    }
+
+    for (auto it = newJoints.begin(); it != newJoints.end(); it++) {
+        it->first->CopyInto(it->second, newBodies, newJoints, newJointEdges);
+    }
+
+    for (auto it = newContacts.begin(); it != newContacts.end(); it++) {
+        it->first->CopyInto(it->second, newBodies, newFixtures, newJoints, newJointEdges, newContacts, newContactEdges);
+    }
+
+    for (int i = 0; i < m_contactManager.m_broadPhase.m_tree.m_nodeCount; i++) {
+        b2TreeNode* node = m_contactManager.m_broadPhase.m_tree.m_nodes + i;
+        b2FixtureProxy* proxy = (b2FixtureProxy*) node->userData;
+        node->userData = (proxy == NULL) ? NULL : newFixtureProxies.at(proxy);
+    }
+
+    m_contactManager.m_contactList = (other->m_contactManager.m_contactList == NULL) ? NULL : newContacts.at(other->m_contactManager.m_contactList);
+
+    m_bodyList = (other->m_bodyList == NULL) ? NULL : newBodies.at(other->m_bodyList);
+    m_jointList = (other->m_jointList == NULL) ? NULL : newJoints.at(other->m_jointList);
+    m_particleSystemList = NULL; // TODO support copying liquidfun particle system
 }
 
 b2World::~b2World()

@@ -61,6 +61,48 @@ b2RevoluteJoint::b2RevoluteJoint(const b2RevoluteJointDef* def)
 	m_limitState = e_inactiveLimit;
 }
 
+size_t b2RevoluteJoint::Size() const {
+    return sizeof(b2RevoluteJoint);
+}
+
+void b2RevoluteJoint::CopyInto(b2Joint* target,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
+    CopyBaseInto(target, newBodies, newJoints, newJointEdges);
+
+    b2RevoluteJoint* t = (b2RevoluteJoint*) target;
+
+    t->m_localAnchorA = m_localAnchorA;
+    t->m_localAnchorB = m_localAnchorB;
+    t->m_impulse = m_impulse;
+    t->m_motorImpulse = m_motorImpulse;
+
+    t->m_enableMotor = m_enableMotor;
+    t->m_maxMotorTorque = m_maxMotorTorque;
+    t->m_motorSpeed = m_motorSpeed;
+
+    t->m_enableLimit = m_enableLimit;
+    t->m_referenceAngle = m_referenceAngle;
+    t->m_lowerAngle = m_lowerAngle;
+    t->m_upperAngle = m_upperAngle;
+
+
+    t->m_indexA = m_indexA;
+    t->m_indexB = m_indexB;
+    t->m_rA = m_rA;
+    t->m_rB = m_rB;
+    t->m_localCenterA = m_localCenterA;
+    t->m_localCenterB = m_localCenterB;
+    t->m_invMassA = m_invMassA;
+    t->m_invMassB = m_invMassB;
+    t->m_invIA = m_invIA;
+    t->m_invIB = m_invIB;
+    t->m_mass = m_mass;
+    t->m_motorMass = m_motorMass;
+    t->m_limitState = m_limitState;
+}
+
 void b2RevoluteJoint::InitVelocityConstraints(const b2SolverData& data)
 {
 	m_indexA = m_bodyA->m_islandIndex;

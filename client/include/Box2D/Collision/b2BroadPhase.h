@@ -107,6 +107,10 @@ public:
 private:
 
 	friend class b2DynamicTree;
+	friend class b2ContactManager;
+	friend class b2World;
+
+	b2BroadPhase(const b2BroadPhase* other);
 
 	void BufferMove(int32 proxyId);
 	void UnBufferMove(int32 proxyId);

@@ -58,6 +58,42 @@ b2MotorJoint::b2MotorJoint(const b2MotorJointDef* def)
 	m_correctionFactor = def->correctionFactor;
 }
 
+size_t b2MotorJoint::Size() const {
+    return sizeof(b2MotorJoint);
+}
+
+void b2MotorJoint::CopyInto(b2Joint* target,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
+    CopyBaseInto(target, newBodies, newJoints, newJointEdges);
+
+    b2MotorJoint* t = (b2MotorJoint*) target;
+
+    t->m_linearOffset = m_linearOffset;
+    t->m_angularOffset = m_angularOffset;
+    t->m_linearImpulse = m_linearImpulse;
+    t->m_angularImpulse = m_angularImpulse;
+    t->m_maxForce = m_maxForce;
+    t->m_maxTorque = m_maxTorque;
+    t->m_correctionFactor = m_correctionFactor;
+
+    t->m_indexA = m_indexA;
+    t->m_indexB = m_indexB;
+    t->m_rA = m_rA;
+    t->m_rB = m_rB;
+    t->m_localCenterA = m_localCenterA;
+    t->m_localCenterB = m_localCenterB;
+    t->m_linearError = m_linearError;
+    t->m_angularError = m_angularError;
+    t->m_invMassA = m_invMassA;
+    t->m_invMassB = m_invMassB;
+    t->m_invIA = m_invIA;
+    t->m_invIB = m_invIB;
+    t->m_linearMass = m_linearMass;
+    t->m_angularMass = m_angularMass;
+}
+
 void b2MotorJoint::InitVelocityConstraints(const b2SolverData& data)
 {
 	m_indexA = m_bodyA->m_islandIndex;

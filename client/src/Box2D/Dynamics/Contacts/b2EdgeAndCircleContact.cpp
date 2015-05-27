@@ -22,6 +22,20 @@
 
 #include <new>
 
+size_t b2EdgeAndCircleContact::Size() const {
+    return sizeof(b2EdgeAndCircleContact);
+}
+
+void b2EdgeAndCircleContact::CopyInto(b2Contact* target,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
+        const std::unordered_map<b2Contact*, b2Contact*>& newContacts,
+        const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges) const {
+    CopyBaseInto(target, newBodies, newFixtures, newJoints, newJointEdges, newContacts, newContactEdges);
+}
+
 b2Contact* b2EdgeAndCircleContact::Create(b2Fixture* fixtureA, int32, b2Fixture* fixtureB, int32, b2BlockAllocator* allocator)
 {
 	void* mem = allocator->Allocate(sizeof(b2EdgeAndCircleContact));

@@ -156,6 +156,44 @@ b2Contact::b2Contact(b2Fixture* fA, int32 indexA, b2Fixture* fB, int32 indexB)
 	m_tangentSpeed = 0.0f;
 }
 
+void b2Contact::CopyBaseInto(b2Contact* target,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
+        const std::unordered_map<b2Contact*, b2Contact*>& newContacts,
+        const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges) const {
+    target->m_flags = m_flags;
+
+    target->m_prev = (m_prev == NULL) ? NULL : newContacts.at(m_prev);
+    target->m_next = (m_next == NULL) ? NULL : newContacts.at(m_next);
+
+    target->m_fixtureA = (m_fixtureA == NULL) ? NULL : newFixtures.at(m_fixtureA);
+    target->m_fixtureB = (m_fixtureB == NULL) ? NULL : newFixtures.at(m_fixtureB);
+
+    target->m_indexA = m_indexA;
+    target->m_indexB = m_indexB;
+
+    target->m_manifold = m_manifold;
+
+    target->m_toiCount = m_toiCount;
+    target->m_toi = m_toi;
+
+    target->m_friction = m_friction;
+    target->m_restitution = m_restitution;
+
+    target->m_tangentSpeed = m_tangentSpeed;
+
+    target->m_nodeA.other = (m_nodeA.other == NULL) ? NULL : newBodies.at(m_nodeA.other);
+    target->m_nodeA.contact = (m_nodeA.contact == NULL) ? NULL : newContacts.at(m_nodeA.contact);
+    target->m_nodeA.prev = (m_nodeA.prev == NULL) ? NULL : newContactEdges.at(m_nodeA.prev);
+    target->m_nodeA.next = (m_nodeA.next == NULL) ? NULL : newContactEdges.at(m_nodeA.next);
+    target->m_nodeB.other = (m_nodeB.other == NULL) ? NULL : newBodies.at(m_nodeB.other);
+    target->m_nodeB.contact = (m_nodeB.contact == NULL) ? NULL : newContacts.at(m_nodeB.contact);
+    target->m_nodeB.prev = (m_nodeB.prev == NULL) ? NULL : newContactEdges.at(m_nodeB.prev);
+    target->m_nodeB.next = (m_nodeB.next == NULL) ? NULL : newContactEdges.at(m_nodeB.next);
+}
+
 // Update the contact manifold and touching status.
 // Note: do not assume the fixture AABBs are overlapping or are valid.
 void b2Contact::Update(b2ContactListener* listener)

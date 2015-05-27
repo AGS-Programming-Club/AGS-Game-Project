@@ -107,6 +107,54 @@ b2Body::b2Body(const b2BodyDef* bd, b2World* world)
 	m_fixtureCount = 0;
 }
 
+b2Body::b2Body(const b2Body* other, b2World* newWorld,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
+        const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges) {
+    m_type = other->m_type;
+
+    m_flags = other->m_flags;
+
+    m_islandIndex = other->m_islandIndex;
+
+    m_xf = other->m_xf;
+    m_xf0 = other->m_xf0;
+    m_sweep = other->m_sweep;
+
+    m_linearVelocity = other->m_linearVelocity;
+    m_angularVelocity = other->m_angularVelocity;
+
+    m_force = other->m_force;
+    m_torque = other->m_torque;
+
+    m_world = newWorld;
+    m_prev = (other->m_prev == NULL) ? NULL : newBodies.at(other->m_prev);
+    m_next = (other->m_next == NULL) ? NULL : newBodies.at(other->m_next);
+
+    m_fixtureCount = other->m_fixtureCount;
+
+    m_jointList = (other->m_jointList == NULL) ? NULL : newJointEdges.at(other->m_jointList);
+    m_contactList = (other->m_contactList == NULL) ? NULL : newContactEdges.at(other->m_contactList);
+
+    m_mass = other->m_mass;
+    m_invMass = other->m_invMass;
+
+    m_I = other->m_I;
+    m_invI = other->m_invI;
+
+    m_linearDamping = other->m_linearDamping;
+    m_angularDamping = other->m_angularDamping;
+    m_gravityScale = other->m_gravityScale;
+
+    m_sleepTime = other->m_sleepTime;
+
+    m_userData = other->m_userData;
+
+    m_fixtureList = (other->m_fixtureList == NULL) ? NULL : newFixtures.at(other->m_fixtureList);
+}
+
 b2Body::~b2Body()
 {
 	// shapes and joints are destroyed in b2World::Destroy

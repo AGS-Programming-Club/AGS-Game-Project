@@ -70,11 +70,13 @@ static void b2FreeDefault(void* mem, void* callbackData)
 /// Set allocCallback and freeCallback to NULL to restore the default
 /// allocator (malloc / free).
 void b2SetAllocFreeCallbacks(b2AllocFunction allocCallback,
-							 b2FreeFunction freeCallback, void* callbackData)
+							 b2FreeFunction freeCallback,
+							 void* callbackData,
+							 bool skipAllocNumAssert)
 {
 	b2Assert((allocCallback && freeCallback) ||
 			 (!allocCallback && !freeCallback));
-	b2Assert(0 == b2GetNumAllocs());
+	if (!skipAllocNumAssert) b2Assert(0 == b2GetNumAllocs());
 	if (allocCallback && freeCallback)
 	{
 		b2_allocCallback = allocCallback;

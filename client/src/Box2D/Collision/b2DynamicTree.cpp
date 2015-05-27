@@ -45,6 +45,21 @@ b2DynamicTree::b2DynamicTree()
 	m_insertionCount = 0;
 }
 
+b2DynamicTree::b2DynamicTree(const b2DynamicTree* other) {
+    m_root = other->m_root;
+
+    m_nodes = (b2TreeNode*) b2Alloc(other->m_nodeCapacity * sizeof(b2TreeNode));
+    memcpy(m_nodes, other->m_nodes, other->m_nodeCapacity * sizeof(b2TreeNode));
+    m_nodeCount = other->m_nodeCount;
+    m_nodeCapacity = other->m_nodeCapacity;
+
+    m_freeList = other->m_freeList;
+
+    m_path = other->m_path;
+
+    m_insertionCount = other->m_insertionCount;
+}
+
 b2DynamicTree::~b2DynamicTree()
 {
 	// This frees the entire tree in one shot.
