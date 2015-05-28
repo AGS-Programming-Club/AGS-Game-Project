@@ -25,6 +25,10 @@ if (BUILD_UNIT_TESTS)
     enable_testing()
 endif ()
 
+include (CheckIncludeFiles)
+check_include_files ("sys/mman.h" HAVE_SYS_MMAN_H)
+check_include_files ("Windows.h" HAVE_WINDOWS_H)
+
 configure_file (
     "${PROJECT_SOURCE_DIR}/config.h.in"
     "${PROJECT_BINARY_DIR}/config.h"

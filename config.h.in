@@ -1,3 +1,6 @@
-#define AGS-Game-Project_VERSION_MAJOR @AGS-Game-Project_VERSION_MAJOR@
-#define AGS-Game-Project_VERSION_MINOR @AGS-Game-Project_VERSION_MINOR@
-#define AGS-Game-Project_VERSION_PATCH @AGS-Game-Project_VERSION_PATCH@
+#define AGS_Game_Project_VERSION_MAJOR @AGS-Game-Project_VERSION_MAJOR@
+#define AGS_Game_Project_VERSION_MINOR @AGS-Game-Project_VERSION_MINOR@
+#define AGS_Game_Project_VERSION_PATCH @AGS-Game-Project_VERSION_PATCH@
+
+#cmakedefine HAVE_SYS_MMAN_H 1
+#cmakedefine HAVE_WINDOWS_H 1
