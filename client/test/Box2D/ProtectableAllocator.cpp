@@ -77,7 +77,7 @@ void ProtectableAllocator::Free(void* ptr) {
     B2_NOT_USED(ptr);
 }
 
-void ProtectableAllocator::Protect(AccessLevel access) { // TODO
+void ProtectableAllocator::Protect(AccessLevel access) {
     b2Assert(mem != NULL);
 #if HAVE_SYS_MMAN_H
     int prot;

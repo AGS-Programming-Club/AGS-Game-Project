@@ -48,7 +48,7 @@ class CopyTests : public ::testing::Test {
     virtual void SetUp();
     virtual void TearDown();
 
-    const int ALLOC_SIZE = 1024 * 1024;
+    static const int ALLOC_SIZE = 1024 * 1024;
 
     ProtectableAllocator* old_allocator;
     ProtectableAllocator* new_allocator;
