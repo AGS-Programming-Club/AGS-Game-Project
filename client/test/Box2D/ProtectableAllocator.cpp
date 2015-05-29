@@ -31,7 +31,7 @@
 
 #include "config.h"
 
-#include "ProtectableAllocator.h"
+#include "ProtectableAllocator.hpp"
 
 #if HAVE_SYS_MMAN_H
 #include <sys/mman.h>

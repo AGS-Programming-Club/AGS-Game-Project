@@ -33,7 +33,7 @@
 
 #include "Box2D/Box2D.h"
 
-#include "ProtectableAllocator.h"
+#include "ProtectableAllocator.hpp"
 
 /**
  * Test the b2World copy function (implemented through a copy constructor)

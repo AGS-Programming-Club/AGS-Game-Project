@@ -29,8 +29,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef CLIENT_TEST_BOX2D_PAGEALLOCATOR_H_
-#define CLIENT_TEST_BOX2D_PAGEALLOCATOR_H_
+#ifndef CLIENT_TEST_BOX2D_PAGEALLOCATOR_HPP_
+#define CLIENT_TEST_BOX2D_PAGEALLOCATOR_HPP_
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -60,4 +60,4 @@ private:
     uint8_t* mem;
 };
 
-#endif /* CLIENT_TEST_BOX2D_PAGEALLOCATOR_H_ */
+#endif /* CLIENT_TEST_BOX2D_PAGEALLOCATOR_HPP_ */
