@@ -63,7 +63,8 @@ void GameScene::dispose() {
 }
 
 void GameScene::update() {
-	text1->supply->setText(request->getString());
+	text1->supply->setText("TEXT: " + request->getString());
+	render::getWorldJob()->remakeTextBuffer();
 }
 
 void w() {

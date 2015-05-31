@@ -178,7 +178,7 @@ namespace keybinds {
 				e.run();
 		}
 
-		for(int i = 0; i < 350; i++) {
+		for(int i = 0; i < 348; i++) {
 			changes[i] = 0;
 		}
 	}
