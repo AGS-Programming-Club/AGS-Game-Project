@@ -9,6 +9,7 @@
 
 #include "log.hpp"
 #include "inputio/keybinds.hpp"
+#include "inputio/textInput.hpp"
 #include "render/renderer.hpp"
 #include "render/texture.hpp"
 #include "scene/gamescene.hpp"
@@ -25,6 +26,8 @@ RenderJob::SolidTriangleData* triangle2;
 RenderJob::TextData* text1;
 RenderJob::LineData* line1;
 RenderJob* job;
+TextInput::TextRequest* request;
+
 
 void GameScene::init() {
 	log(INFO, "Initializing GameScene");
@@ -34,11 +37,14 @@ void GameScene::init() {
 	keybinds::add(s, GLFW_KEY_S, KEY_DOWN);
 	keybinds::add(d, GLFW_KEY_D, KEY_DOWN);
 	
+	request = new TextInput::TextRequest(true, NULL,  NULL, 20);
+	keybinds::addTextRequest(false, request, GLFW_KEY_ENTER, true);
+
 	job = render::getWorldJob();
 
 	triangle1 = job->addTexturedTriangle(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
 	triangle2 = job->addSolidTriangle(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec4(0.5, 1, 0.5, 1));
-	text1 = job->addText(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "abcd TEXT text Texty text", 0);
+	text1 = job->addText(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "                    ", 0);
 	line1 = job->addLine(vec2(-0.5, 0), vec2(0.5, 0), vec4(1, 0.5, 0.5, 1));
 }
 
@@ -57,7 +63,7 @@ void GameScene::dispose() {
 }
 
 void GameScene::update() {
-
+	text1->supply->setText(request->getString());
 }
 
 void w() {
