@@ -29,7 +29,9 @@ namespace TextInput {
 	}
 
 	void TextRequest::finish() {
-		finished(this);
+		if(finished != NULL)
+			finished(this);
+
 		keybinds::removeTextRequest();
 	}
 

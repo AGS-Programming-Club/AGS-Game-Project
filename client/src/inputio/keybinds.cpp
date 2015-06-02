@@ -90,7 +90,7 @@ namespace keybinds {
 			case GLFW_PRESS:
 				n = 1;
 
-				if(currentRequest == NULL) {
+				if(currentRequest != NULL) {
 					if(mods && GLFW_MOD_CONTROL != 0) {
 						switch(key) {
 							case GLFW_KEY_A:
