@@ -9,7 +9,7 @@
 
 #include "log.hpp"
 #include "inputio/keybinds.hpp"
-#include "inputio/textInput.hpp"
+#include "inputio/textinput.hpp"
 #include "render/renderer.hpp"
 #include "render/texture.hpp"
 #include "scene/gamescene.hpp"

@@ -10,7 +10,7 @@
 
 #include "log.hpp"
 #include "render/renderer.hpp"
-#include "render/programLoader.hpp"
+#include "render/programloader.hpp"
 
 using namespace std;
 using namespace glm;

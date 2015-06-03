@@ -1,7 +1,7 @@
 #ifndef KEYBINDS
 #define KEYBINDS
 
-#include "inputio/textInput.hpp"
+#include "inputio/textinput.hpp"
 
 /** KEY_DOWN is called whenever a key is down on a poll call
  * 	KEY_UP is called whenever a key is up on a poll call

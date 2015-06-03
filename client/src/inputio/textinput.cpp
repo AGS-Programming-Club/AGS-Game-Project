@@ -1,6 +1,6 @@
 #include <string>
-#include "inputio/textInput.hpp"
-#include "inputio/keyBinds.hpp"
+#include "inputio/textinput.hpp"
+#include "inputio/keybinds.hpp"
 #include "scene/debugoverlayscene.hpp"
 
 using namespace std;

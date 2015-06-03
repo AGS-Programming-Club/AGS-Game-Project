@@ -3,7 +3,7 @@
 #include <vector>
 #include <map>
 #include <GLFW/glfw3.h>
-#include "inputio/textInput.hpp"
+#include "inputio/textinput.hpp"
 #include "log.hpp"
 
 using namespace std;
