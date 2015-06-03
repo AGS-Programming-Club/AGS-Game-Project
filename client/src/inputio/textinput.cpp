@@ -27,7 +27,7 @@ namespace TextInput {
 
 		if(selEnd != selStart) {
 			text = text.replace(selStart, selEnd, &c, 1);
-			pos = selEnd;
+			pos = selStart;
 		} else {
 			if(text.length() + 1 >= maxLength) {
 				return;
