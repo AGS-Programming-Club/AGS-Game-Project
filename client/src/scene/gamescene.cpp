@@ -15,6 +15,7 @@
 #include "scene/gamescene.hpp"
 
 using namespace glm;
+using namespace std;
 
 void w();
 void a();
@@ -37,14 +38,14 @@ void GameScene::init() {
 	keybinds::add(s, GLFW_KEY_S, KEY_DOWN);
 	keybinds::add(d, GLFW_KEY_D, KEY_DOWN);
 	
-	request = new TextInput::TextRequest(true, NULL,  NULL, 20);
+	request = new TextInput::TextRequest(true, NULL,  NULL, 46);
 	keybinds::addTextRequest(false, request, GLFW_KEY_ENTER, true);
 
 	job = render::getWorldJob();
 
 	triangle1 = job->addTexturedTriangle(vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(0.5, 0.5), vec2(0, 0), vec2(1, 0), vec2(1, 1), 0);
 	triangle2 = job->addSolidTriangle(vec2(-0.5, -0.5), vec2(0.5, 0.5), vec2(-0.5, 0.5), vec4(0.5, 1, 0.5, 1));
-	text1 = job->addText(vec2(-1, 0), vec4(0.5, 1, 1, 1), 0.1, "                    ", 0);
+	text1 = job->addText(vec2(-1, -1), vec4(0.5, 1, 1, 1), 0.1, string(60, ' '), 0);
 	line1 = job->addLine(vec2(-0.5, 0), vec2(0.5, 0), vec4(1, 0.5, 0.5, 1));
 }
 

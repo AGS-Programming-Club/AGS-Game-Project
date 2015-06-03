@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <glm/glm.hpp>
+#include <map>
 
 #include "log.hpp"
 #include "render/renderer.hpp"
@@ -16,26 +17,52 @@
 using namespace glm;
 using namespace std;
 
-RenderJob::TextData* fpsText;
+DebugOverlayScene* INSTANCE;
+
+map<string, RenderJob::TextData*> lines;
+int nextLine = 1;
+const float LINE_DEPTH = 0.15f;
+
 RenderJob* debugOverlayJob;
 
+DebugOverlayScene* getDebugOverlay() {
+	return INSTANCE;
+}
+
+/** Adds a line to the debug display, DO NOT use a name already taken, terrible eldrich things will occur */
+void DebugOverlayScene::addLine(std::string name, int maxLength) {
+	lines[name] = debugOverlayJob->addText(vec2(-1, 1 - nextLine++ * LINE_DEPTH), vec4(1, 1, 1, 1), 0.1, string(' ', maxLength), 0);
+}
+
+void DebugOverlayScene::removeLine(std::string name) {
+	//TODO
+}
+
+void DebugOverlayScene::setLine(string name, string text) {
+	lines[name]->supply->setText(text);
+	debugOverlayJob->remakeTextBuffer();
+}
+
 void DebugOverlayScene::init() {
+	INSTANCE = this;
+
 	log(INFO, "Initializing DebugOverlayScene");
 	
-	debugOverlayJob = render::createRenderJob();
-	fpsText = debugOverlayJob->addText(vec2(-1, 0.85), vec4(1, 1, 1, 1), 0.1, "FPS: 000000", 0); // the scaling of the text seems a bit off, should be `vec2(-1, 0.9)` and `0.1` I think
+	debugOverlayJob = render::getUIJob();
+	addLine("FPS", 10);
+	addLine("POS", 10);
+	addLine("START", 10);
+	addLine("END", 10);
 }
 
 void DebugOverlayScene::dispose() {
 	log(INFO, "Disposing of DebugOverlayScene");
 	
-	debugOverlayJob->removeText(fpsText);
+	for(auto name : lines) {
+		removeLine(name.first);
+	}
 }
 
 void DebugOverlayScene::update() {
-	static int i = 0;
-	i++;
-
-	fpsText->supply->setText("FPS: " + std::to_string(int(timing::getFrameClock().TPS())));
-	debugOverlayJob->remakeTextBuffer();
+	setLine("FPS", "FPS: " + std::to_string(int(timing::getFrameClock().TPS())));
 }

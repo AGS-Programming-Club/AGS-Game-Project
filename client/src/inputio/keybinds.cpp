@@ -91,7 +91,7 @@ namespace keybinds {
 				n = 1;
 
 				if(currentRequest != NULL) {
-					if(mods && GLFW_MOD_CONTROL != 0) {
+					if((mods & GLFW_MOD_CONTROL) != 0) {
 						switch(key) {
 							case GLFW_KEY_A:
 								currentRequest->ctrlA();
@@ -104,6 +104,37 @@ namespace keybinds {
 								break;
 						}
 					}
+
+					if((mods & GLFW_MOD_SHIFT) != 0) {
+						switch(key) {
+							case GLFW_KEY_RIGHT:
+								currentRequest->rightShiftArrow();
+								break;
+							case GLFW_KEY_LEFT:
+								currentRequest->leftShiftArrow();
+								break;
+						}
+					} else {
+						switch(key) {
+							case GLFW_KEY_RIGHT:
+								currentRequest->rightArrow();
+								break;
+							case GLFW_KEY_LEFT:
+								currentRequest->leftArrow();
+								break;
+							case GLFW_KEY_BACKSPACE:
+								currentRequest->backspaceKey();
+								break;
+							case GLFW_KEY_DELETE:
+								currentRequest->delKey();
+						}
+					}
+
+					if(key == finishKeycode) {
+						currentRequest->finish();
+					}
+
+					//TODO what happens if finish and left are called in the same frame?
 
 					if(consumePresses)
 						return;
@@ -132,27 +163,6 @@ namespace keybinds {
 	/** Polls the input devices and runs the added keybinds */
 	void poll() {
 		if(currentRequest != NULL) {
-			bool shift = glfwGetKey(render::getWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS || glfwGetKey(render::getWindow(), GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS;
-
-			if(glfwGetKey(render::getWindow(), finishKeycode) == GLFW_PRESS) {
-				currentRequest->finish();
-			}
-
-			if(glfwGetKey(render::getWindow(), GLFW_KEY_LEFT) == GLFW_PRESS) {
-				if(shift) {
-					currentRequest->leftShiftArrow();
-				} else {
-					currentRequest->leftArrow();
-				}
-			}
-
-			if(glfwGetKey(render::getWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
-				if(shift) {
-					currentRequest->rightShiftArrow();
-				} else {
-					currentRequest->rightArrow();
-				}
-			}
 
 			if(consumePresses)
 				return;

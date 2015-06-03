@@ -24,6 +24,8 @@ namespace TextInput {
 		void rightArrow();
 		void leftShiftArrow();
 		void rightShiftArrow();
+		void backspaceKey();
+		void delKey();
 
 		void ctrlA();
 		void ctrlC();
