@@ -28,13 +28,15 @@ size_t b2ChainAndPolygonContact::Size() const {
     return sizeof(b2ChainAndPolygonContact);
 }
 
-void b2ChainAndPolygonContact::CopyInto(b2Contact* target,
+void b2ChainAndPolygonContact::CopyConstructInto(b2Contact* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
         const std::unordered_map<b2Contact*, b2Contact*>& newContacts,
         const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges) const {
+    new (target) b2ChainAndPolygonContact;
+
     CopyBaseInto(target, newBodies, newFixtures, newJoints, newJointEdges, newContacts, newContactEdges);
 }
 

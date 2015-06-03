@@ -41,14 +41,21 @@
  * Test outline:<br>
  * - Check parameters are the same on both worlds after copying.
  * - Check doing stuff the new world does not access the old world.
- * - Check simulating the old and new world yeild the same results.
+ * - Check simulating the old and new world yield the same results.
+ * - Check making a new copy of the world on each step of the simulation works.
  */
 class CopyTests : public ::testing::Test {
     protected:
     virtual void SetUp();
     virtual void TearDown();
 
-    static const int ALLOC_SIZE = 1024 * 1024;
+    static constexpr float32 TIME_STEP = 1.0f / 60.0f;
+    static constexpr int32 ITERATIONS = 240;
+    static constexpr int32 VELOCITY_ITERATIONS = 8;
+    static constexpr int32 POSITION_ITERATIONS = 3;
+    static constexpr int32 PARTICLE_ITERATIONS = 3;
+
+    static constexpr int ALLOC_SIZE = 1024 * 1024;
 
     ProtectableAllocator* old_allocator;
     ProtectableAllocator* new_allocator;
@@ -115,17 +122,12 @@ void CopyTests::TearDown() {
     b2SetAllocFreeCallbacks(NULL, NULL, NULL);
 }
 
-TEST_F(CopyTests, PositionAngleTest) {
+TEST_F(CopyTests, InitialParametersTest) {
     ASSERT_NE(new_world, old_world);
     ASSERT_NE(new_body, old_body);
 
     ASSERT_EQ(old_body->GetType(), b2_dynamicBody);
     ASSERT_EQ(new_body->GetType(), b2_dynamicBody);
-
-    const float32 timeStep = 1.0f / 60.0f;
-    const int32 iterations = 240;
-    const int32 velocityIterations = 8;
-    const int32 positionIterations = 3;
 
     b2Vec2 oldPosition = old_body->GetPosition();
     float32 oldAngle = old_body->GetAngle();
@@ -135,19 +137,47 @@ TEST_F(CopyTests, PositionAngleTest) {
     EXPECT_EQ(new_body->GetPosition(), oldPosition);
     EXPECT_EQ(new_body->GetAngle(), oldAngle);
 
-    old_allocator->Protect(AccessLevel::READWRITE);
+    old_allocator->Protect(AccessLevel::READONLY);
+}
 
-    for (int32 i = 0; i < iterations; i++) {
-        old_world->Step(timeStep, velocityIterations, positionIterations);
+TEST_F(CopyTests, SimulationTest) {
+    old_allocator->Protect(AccessLevel::READWRITE);
+    new_allocator->Protect(AccessLevel::NOACCESS);
+
+    b2Vec2 oldPosition = old_body->GetPosition();
+    float32 oldAngle = old_body->GetAngle();
+
+    for (int32 i = 0; i < ITERATIONS; i++) {
+        old_world->Step(TIME_STEP,
+                VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
     }
 
     old_allocator->Protect(AccessLevel::NOACCESS);
+    new_allocator->Protect(AccessLevel::READWRITE);
 
     EXPECT_EQ(new_body->GetPosition(), oldPosition);
     EXPECT_EQ(new_body->GetAngle(), oldAngle);
 
-    for (int32 i = 0; i < iterations; i++) {
-        new_world->Step(timeStep, velocityIterations, positionIterations);
+    for (int32 i = 0; i < ITERATIONS; i++) {
+        new_allocator->Protect(AccessLevel::READONLY);
+        ProtectableAllocator* step_allocator = new ProtectableAllocator(ALLOC_SIZE);
+        step_allocator->SetAs_b2Alloc();
+        b2World* step_world = (b2World*) step_allocator->Allocate(sizeof(b2World));
+        new (step_world) b2World(new_world);
+        new_allocator->Protect(AccessLevel::NOACCESS);
+
+        step_world->Step(TIME_STEP,
+                VELOCITY_ITERATIONS, POSITION_ITERATIONS, PARTICLE_ITERATIONS);
+
+        new_allocator->SetAs_b2Alloc();
+        new_allocator->Protect(AccessLevel::READWRITE);
+        new_world->~b2World();
+        delete new_allocator;
+
+        step_allocator->SetAs_b2Alloc();
+        new_allocator = step_allocator;
+        new_world = step_world;
+        new_body = step_world->GetBodyList();
     }
 
     old_allocator->Protect(AccessLevel::READONLY);

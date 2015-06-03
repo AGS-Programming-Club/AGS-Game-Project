@@ -59,10 +59,12 @@ size_t b2WeldJoint::Size() const {
     return sizeof(b2WeldJoint);
 }
 
-void b2WeldJoint::CopyInto(b2Joint* target,
+void b2WeldJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
+    new (target) b2WeldJoint;
+
     CopyBaseInto(target, newBodies, newJoints, newJointEdges);
 
     b2WeldJoint* t = (b2WeldJoint*) target;

@@ -78,10 +78,12 @@ size_t b2WheelJoint::Size() const {
     return sizeof(b2WheelJoint);
 }
 
-void b2WheelJoint::CopyInto(b2Joint* target,
+void b2WheelJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
+    new (target) b2WheelJoint;
+
     CopyBaseInto(target, newBodies, newJoints, newJointEdges);
 
     b2WheelJoint* t = (b2WheelJoint*) target;

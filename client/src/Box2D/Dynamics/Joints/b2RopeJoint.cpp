@@ -47,10 +47,12 @@ size_t b2RopeJoint::Size() const {
     return sizeof(b2RopeJoint);
 }
 
-void b2RopeJoint::CopyInto(b2Joint* target,
+void b2RopeJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
+    new (target) b2RopeJoint;
+
     CopyBaseInto(target, newBodies, newJoints, newJointEdges);
 
     b2RopeJoint* t = (b2RopeJoint*) target;

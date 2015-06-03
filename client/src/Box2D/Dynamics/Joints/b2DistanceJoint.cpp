@@ -63,10 +63,12 @@ size_t b2DistanceJoint::Size() const {
     return sizeof(b2DistanceJoint);
 }
 
-void b2DistanceJoint::CopyInto(b2Joint* target,
+void b2DistanceJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
+    new (target) b2DistanceJoint;
+
     CopyBaseInto(target, newBodies, newJoints, newJointEdges);
 
     b2DistanceJoint* t = (b2DistanceJoint*) target;

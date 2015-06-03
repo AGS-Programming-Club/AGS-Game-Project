@@ -121,11 +121,11 @@ b2World::b2World(const b2World* other) :
     }
 
     for (auto it = newJoints.begin(); it != newJoints.end(); it++) {
-        it->first->CopyInto(it->second, newBodies, newJoints, newJointEdges);
+        it->first->CopyConstructInto(it->second, newBodies, newJoints, newJointEdges);
     }
 
     for (auto it = newContacts.begin(); it != newContacts.end(); it++) {
-        it->first->CopyInto(it->second, newBodies, newFixtures, newJoints, newJointEdges, newContacts, newContactEdges);
+        it->first->CopyConstructInto(it->second, newBodies, newFixtures, newJoints, newJointEdges, newContacts, newContactEdges);
     }
 
     for (int i = 0; i < m_contactManager.m_broadPhase.m_tree.m_nodeCount; i++) {

@@ -189,7 +189,7 @@ protected:
 	virtual ~b2Contact() {}
 
     virtual size_t Size() const = 0;
-    virtual void CopyInto(b2Contact* target,
+    virtual void CopyConstructInto(b2Contact* target,
             const std::unordered_map<b2Body*, b2Body*>& newBodies,
             const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
             const std::unordered_map<b2Joint*, b2Joint*>& newJoints,

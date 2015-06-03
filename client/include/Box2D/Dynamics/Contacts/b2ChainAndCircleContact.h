@@ -33,16 +33,19 @@ public:
 	b2ChainAndCircleContact(b2Fixture* fixtureA, int32 indexA, b2Fixture* fixtureB, int32 indexB);
 	~b2ChainAndCircleContact() {}
 
+	void Evaluate(b2Manifold* manifold, const b2Transform& xfA, const b2Transform& xfB);
+
+private:
+    b2ChainAndCircleContact() {}
+
     virtual size_t Size() const;
-    virtual void CopyInto(b2Contact* target,
+    virtual void CopyConstructInto(b2Contact* target,
             const std::unordered_map<b2Body*, b2Body*>& newBodies,
             const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
             const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
             const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
             const std::unordered_map<b2Contact*, b2Contact*>& newContacts,
             const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges) const;
-
-	void Evaluate(b2Manifold* manifold, const b2Transform& xfA, const b2Transform& xfB);
 };
 
 #endif

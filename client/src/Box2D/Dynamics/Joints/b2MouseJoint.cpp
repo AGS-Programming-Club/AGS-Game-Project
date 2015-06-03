@@ -53,10 +53,12 @@ size_t b2MouseJoint::Size() const {
     return sizeof(b2MouseJoint);
 }
 
-void b2MouseJoint::CopyInto(b2Joint* target,
+void b2MouseJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
+    new (target) b2MouseJoint;
+
     CopyBaseInto(target, newBodies, newJoints, newJointEdges);
 
     b2MouseJoint* t = (b2MouseJoint*) target;

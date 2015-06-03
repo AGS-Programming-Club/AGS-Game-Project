@@ -98,10 +98,11 @@ protected:
 
 	friend class b2Joint;
 
+    b2MotorJoint() {}
 	b2MotorJoint(const b2MotorJointDef* def);
 
     virtual size_t Size() const;
-    virtual void CopyInto(b2Joint* target,
+    virtual void CopyConstructInto(b2Joint* target,
             const std::unordered_map<b2Body*, b2Body*>& newBodies,
             const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
             const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const;

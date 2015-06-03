@@ -132,10 +132,12 @@ size_t b2GearJoint::Size() const {
     return sizeof(b2GearJoint);
 }
 
-void b2GearJoint::CopyInto(b2Joint* target,
+void b2GearJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
+    new (target) b2GearJoint;
+
     CopyBaseInto(target, newBodies, newJoints, newJointEdges);
 
     b2GearJoint* t = (b2GearJoint*) target;

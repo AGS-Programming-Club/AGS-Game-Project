@@ -127,10 +127,12 @@ size_t b2PrismaticJoint::Size() const {
     return sizeof(b2PrismaticJoint);
 }
 
-void b2PrismaticJoint::CopyInto(b2Joint* target,
+void b2PrismaticJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
+    new (target) b2PrismaticJoint;
+
     CopyBaseInto(target, newBodies, newJoints, newJointEdges);
 
     b2PrismaticJoint* t = (b2PrismaticJoint*) target;
