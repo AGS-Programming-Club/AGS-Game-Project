@@ -50,9 +50,6 @@ void DebugOverlayScene::init() {
 	
 	debugOverlayJob = render::getUIJob();
 	addLine("FPS", 10);
-	addLine("POS", 10);
-	addLine("START", 10);
-	addLine("END", 10);
 }
 
 void DebugOverlayScene::dispose() {

@@ -16,12 +16,6 @@ namespace TextInput {
 		this->maxLength = maxLength;
 	}
 
-	void updateTmpDebugThings(int pos, int selEnd, int selStart) {
-		getDebugOverlay()->setLine("POS", "Pos: " + std::to_string(pos));
-		getDebugOverlay()->setLine("START", "End: " + std::to_string(selEnd));
-		getDebugOverlay()->setLine("END", "Start: " + std::to_string(selStart));
-	}
-
 	void TextRequest::addChar(unsigned int character) {
 		char c = (char) character;
 
@@ -39,7 +33,9 @@ namespace TextInput {
 
 		selEnd = pos;
 		selStart = pos;
-		updateTmpDebugThings(pos, selEnd, selStart);
+
+		if(change != NULL)
+			change(this);
 	}
 
 	string TextRequest::getString() {
@@ -62,7 +58,6 @@ namespace TextInput {
 
 		selEnd = pos;
 		selStart = pos;
-		updateTmpDebugThings(pos, selEnd, selStart);
 	}
 
 	void TextRequest::rightArrow() {
@@ -74,7 +69,6 @@ namespace TextInput {
 
 		selEnd = pos;
 		selStart = pos;
-		updateTmpDebugThings(pos, selEnd, selStart);
 	}
 
 	void TextRequest::leftShiftArrow() {
@@ -94,8 +88,6 @@ namespace TextInput {
 				pos--;
 			}
 		}
-
-		updateTmpDebugThings(pos, selEnd, selStart);
 	}
 
 	void TextRequest::rightShiftArrow() {
@@ -115,15 +107,12 @@ namespace TextInput {
 				pos++;
 			}
 		}
-
-		updateTmpDebugThings(pos, selEnd, selStart);
 	}
 
 	void TextRequest::ctrlA() {
 		selStart = 0;
 		selEnd = text.length();
 		pos = text.length();
-		updateTmpDebugThings(pos, selEnd, selStart);
 	}
 
 	void TextRequest::ctrlC() {
@@ -149,7 +138,8 @@ namespace TextInput {
 			selEnd = selStart;
 		}
 
-		updateTmpDebugThings(pos, selEnd, selStart);
+		if(change != NULL)
+			change(this);
 	}
 
 	void TextRequest::delKey() {
@@ -172,6 +162,7 @@ namespace TextInput {
 			selEnd = selStart;
 		}
 
-		updateTmpDebugThings(pos, selEnd, selStart);
+		if(change != NULL)
+			change(this);
 	}
 }
