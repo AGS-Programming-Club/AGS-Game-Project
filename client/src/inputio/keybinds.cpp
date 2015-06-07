@@ -20,7 +20,88 @@ namespace keybinds {
 	vector<Event> pressed = vector<Event>();
 	vector<Event> released = vector<Event>();
 
+	const int FRAMES_OF_GRACE = 150;
+	const int FRAMES_DIV = 5;
+
+	int framesBackspaceDown = 0;
+	int framesDelDown = 0;
+	int framesLeftShiftDown = 0;
+	int framesRightShiftDown = 0;
+	int framesLeftDown = 0;
+	int framesRightDown = 0;
+
+	TextInput::TextRequest* currentRequest;
+	bool consumePresses;
+	int finishKeycode;
+
 	int changes[348];
+
+	void textInputOnPoll() {
+		bool shiftDown = (glfwGetKey(render::getWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+				|| (glfwGetKey(render::getWindow(), GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS);
+
+		if(glfwGetKey(render::getWindow(), GLFW_KEY_DELETE) == GLFW_PRESS) {
+			framesDelDown++;
+		} else {
+			framesDelDown = 0;
+		}
+
+		if(glfwGetKey(render::getWindow(), GLFW_KEY_BACKSPACE) == GLFW_PRESS) {
+			framesBackspaceDown++;
+		} else  {
+			framesBackspaceDown = 0;
+		}
+
+		if(glfwGetKey(render::getWindow(), GLFW_KEY_LEFT) == GLFW_PRESS) {
+			if(shiftDown) {
+				framesLeftShiftDown++;
+				framesLeftDown = 0;
+			} else {
+				framesLeftShiftDown = 0;
+				framesLeftDown++;
+			}
+		} else {
+			framesLeftShiftDown = 0;
+			framesLeftDown = 0;
+		}
+
+		if(glfwGetKey(render::getWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			if(shiftDown) {
+				framesRightShiftDown++;
+				framesRightDown = 0;
+			} else {
+				framesRightShiftDown = 0;
+				framesRightDown++;
+			}
+		} else {
+			framesRightShiftDown = 0;
+			framesRightDown = 0;
+		}
+
+		if(framesDelDown > FRAMES_OF_GRACE && framesDelDown % FRAMES_DIV == 0) {
+			currentRequest->delKey();
+		}
+
+		if(framesBackspaceDown > FRAMES_OF_GRACE && framesBackspaceDown % FRAMES_DIV == 0) {
+			currentRequest->backspaceKey();
+		}
+
+		if(framesLeftDown > FRAMES_OF_GRACE && framesLeftDown % FRAMES_DIV == 0) {
+			currentRequest->leftArrow();
+		}
+
+		if(framesRightDown > FRAMES_OF_GRACE && framesRightDown % FRAMES_DIV == 0) {
+			currentRequest->rightArrow();
+		}
+
+		if(framesLeftShiftDown > FRAMES_OF_GRACE && framesLeftShiftDown % FRAMES_DIV == 0) {
+			currentRequest->leftShiftArrow();
+		}
+
+		if(framesRightShiftDown > FRAMES_OF_GRACE && framesRightShiftDown % FRAMES_DIV == 0) {
+			currentRequest->rightShiftArrow();
+		}
+	}
 
 	/** Adds an action to run on a key event */
 	void add(void (*run)(), int keycode, EventCode event) {
@@ -78,10 +159,6 @@ namespace keybinds {
 				break;
 		}
 	}
-
-	TextInput::TextRequest* currentRequest;
-	bool consumePresses;
-	int finishKeycode;
 
 	void callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 		int n = 0;
@@ -163,7 +240,7 @@ namespace keybinds {
 	/** Polls the input devices and runs the added keybinds */
 	void poll() {
 		if(currentRequest != NULL) {
-
+			textInputOnPoll();
 			if(consumePresses)
 				return;
 		}
