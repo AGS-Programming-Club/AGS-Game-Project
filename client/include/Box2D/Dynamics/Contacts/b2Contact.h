@@ -186,6 +186,13 @@ protected:
 
 	b2Contact() : m_fixtureA(NULL), m_fixtureB(NULL) {}
 	b2Contact(b2Fixture* fixtureA, int32 indexA, b2Fixture* fixtureB, int32 indexB);
+    b2Contact(const b2Contact* other,
+            const std::unordered_map<b2Body*, b2Body*>& newBodies,
+            const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
+            const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+            const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
+            const std::unordered_map<b2Contact*, b2Contact*>& newContacts,
+            const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges);
 	virtual ~b2Contact() {}
 
     virtual size_t Size() const = 0;
@@ -196,13 +203,6 @@ protected:
             const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
             const std::unordered_map<b2Contact*, b2Contact*>& newContacts,
             const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges) const = 0;
-    void CopyBaseInto(b2Contact* target,
-            const std::unordered_map<b2Body*, b2Body*>& newBodies,
-            const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
-            const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
-            const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
-            const std::unordered_map<b2Contact*, b2Contact*>& newContacts,
-            const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges) const;
 
 	void Update(b2ContactListener* listener);
 

@@ -22,6 +22,16 @@
 
 #include <new>
 
+b2EdgeAndPolygonContact::b2EdgeAndPolygonContact(const b2EdgeAndPolygonContact* other,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
+        const std::unordered_map<b2Contact*, b2Contact*>& newContacts,
+        const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges)
+        : b2Contact(other, newBodies, newFixtures, newJoints, newJointEdges, newContacts, newContactEdges) {
+}
+
 size_t b2EdgeAndPolygonContact::Size() const {
     return sizeof(b2EdgeAndPolygonContact);
 }
@@ -33,9 +43,7 @@ void b2EdgeAndPolygonContact::CopyConstructInto(b2Contact* target,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
         const std::unordered_map<b2Contact*, b2Contact*>& newContacts,
         const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges) const {
-    new (target) b2EdgeAndPolygonContact;
-
-    CopyBaseInto(target, newBodies, newFixtures, newJoints, newJointEdges, newContacts, newContactEdges);
+    new (target) b2EdgeAndPolygonContact(this, newBodies, newFixtures, newJoints, newJointEdges, newContacts, newContactEdges);
 }
 
 b2Contact* b2EdgeAndPolygonContact::Create(b2Fixture* fixtureA, int32, b2Fixture* fixtureB, int32, b2BlockAllocator* allocator)

@@ -37,6 +37,13 @@ public:
 
 private:
 	b2EdgeAndPolygonContact() {}
+    b2EdgeAndPolygonContact(const b2EdgeAndPolygonContact* other,
+            const std::unordered_map<b2Body*, b2Body*>& newBodies,
+            const std::unordered_map<b2Fixture*, b2Fixture*>& newFixtures,
+            const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+            const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges,
+            const std::unordered_map<b2Contact*, b2Contact*>& newContacts,
+            const std::unordered_map<b2ContactEdge*, b2ContactEdge*>& newContactEdges);
 
     virtual size_t Size() const;
     virtual void CopyConstructInto(b2Contact* target,
