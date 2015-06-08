@@ -98,8 +98,11 @@ public:
 protected:
 	friend class b2Joint;
 
-    b2MouseJoint() {}
 	b2MouseJoint(const b2MouseJointDef* def);
+    b2MouseJoint(const b2MouseJoint* other,
+            const std::unordered_map<b2Body*, b2Body*>& newBodies,
+            const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+            const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges);
 
     virtual size_t Size() const;
     virtual void CopyConstructInto(b2Joint* target,

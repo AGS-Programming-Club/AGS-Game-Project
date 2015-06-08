@@ -43,6 +43,32 @@ b2RopeJoint::b2RopeJoint(const b2RopeJointDef* def)
 	m_length = 0.0f;
 }
 
+b2RopeJoint::b2RopeJoint(const b2RopeJoint* other,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges)
+        : b2Joint(other, newBodies, newJoints, newJointEdges) {
+    m_localAnchorA = other->m_localAnchorA;
+    m_localAnchorB = other->m_localAnchorB;
+    m_maxLength = other->m_maxLength;
+    m_length = other->m_length;
+    m_impulse = other->m_impulse;
+
+    m_indexA = other->m_indexA;
+    m_indexB = other->m_indexB;
+    m_u = other->m_u;
+    m_rA = other->m_rA;
+    m_rB = other->m_rB;
+    m_localCenterA = other->m_localCenterA;
+    m_localCenterB = other->m_localCenterB;
+    m_invMassA = other->m_invMassA;
+    m_invMassB = other->m_invMassB;
+    m_invIA = other->m_invIA;
+    m_invIB = other->m_invIB;
+    m_mass = other->m_mass;
+    m_state = other->m_state;
+}
+
 size_t b2RopeJoint::Size() const {
     return sizeof(b2RopeJoint);
 }
@@ -51,31 +77,7 @@ void b2RopeJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
-    new (target) b2RopeJoint;
-
-    CopyBaseInto(target, newBodies, newJoints, newJointEdges);
-
-    b2RopeJoint* t = (b2RopeJoint*) target;
-
-    t->m_localAnchorA = m_localAnchorA;
-    t->m_localAnchorB = m_localAnchorB;
-    t->m_maxLength = m_maxLength;
-    t->m_length = m_length;
-    t->m_impulse = m_impulse;
-
-    t->m_indexA = m_indexA;
-    t->m_indexB = m_indexB;
-    t->m_u = m_u;
-    t->m_rA = m_rA;
-    t->m_rB = m_rB;
-    t->m_localCenterA = m_localCenterA;
-    t->m_localCenterB = m_localCenterB;
-    t->m_invMassA = m_invMassA;
-    t->m_invMassB = m_invMassB;
-    t->m_invIA = m_invIA;
-    t->m_invIB = m_invIB;
-    t->m_mass = m_mass;
-    t->m_state = m_state;
+    new (target) b2RopeJoint(this, newBodies, newJoints, newJointEdges);
 }
 
 void b2RopeJoint::InitVelocityConstraints(const b2SolverData& data)

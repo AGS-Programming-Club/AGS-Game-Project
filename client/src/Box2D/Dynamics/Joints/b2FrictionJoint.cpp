@@ -53,6 +53,33 @@ b2FrictionJoint::b2FrictionJoint(const b2FrictionJointDef* def)
 	m_maxTorque = def->maxTorque;
 }
 
+b2FrictionJoint::b2FrictionJoint(const b2FrictionJoint* other,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges)
+        : b2Joint(other, newBodies, newJoints, newJointEdges) {
+    m_localAnchorA = other->m_localAnchorA;
+    m_localAnchorB = other->m_localAnchorB;
+
+    m_linearImpulse = other->m_linearImpulse;
+    m_angularImpulse = other->m_angularImpulse;
+    m_maxForce = other->m_maxForce;
+    m_maxTorque = other->m_maxTorque;
+
+    m_indexA = other->m_indexA;
+    m_indexB = other->m_indexB;
+    m_rA = other->m_rA;
+    m_rB = other->m_rB;
+    m_localCenterA = other->m_localCenterA;
+    m_localCenterB = other->m_localCenterB;
+    m_invMassA = other->m_invMassA;
+    m_invMassB = other->m_invMassB;
+    m_invIA = other->m_invIA;
+    m_invIB = other->m_invIB;
+    m_linearMass = other->m_linearMass;
+    m_angularMass = other->m_angularMass;
+}
+
 size_t b2FrictionJoint::Size() const {
     return sizeof(b2FrictionJoint);
 }
@@ -61,32 +88,7 @@ void b2FrictionJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
-    new (target) b2FrictionJoint;
-
-    CopyBaseInto(target, newBodies, newJoints, newJointEdges);
-
-    b2FrictionJoint* t = (b2FrictionJoint*) target;
-
-    t->m_localAnchorA = m_localAnchorA;
-    t->m_localAnchorB = m_localAnchorB;
-
-    t->m_linearImpulse = m_linearImpulse;
-    t->m_angularImpulse = m_angularImpulse;
-    t->m_maxForce = m_maxForce;
-    t->m_maxTorque = m_maxTorque;
-
-    t->m_indexA = m_indexA;
-    t->m_indexB = m_indexB;
-    t->m_rA = m_rA;
-    t->m_rB = m_rB;
-    t->m_localCenterA = m_localCenterA;
-    t->m_localCenterB = m_localCenterB;
-    t->m_invMassA = m_invMassA;
-    t->m_invMassB = m_invMassB;
-    t->m_invIA = m_invIA;
-    t->m_invIB = m_invIB;
-    t->m_linearMass = m_linearMass;
-    t->m_angularMass = m_angularMass;
+    new (target) b2FrictionJoint(this, newBodies, newJoints, newJointEdges);
 }
 
 void b2FrictionJoint::InitVelocityConstraints(const b2SolverData& data)

@@ -86,7 +86,10 @@ protected:
 
 	friend class b2Joint;
 
-    b2FrictionJoint() {}
+    b2FrictionJoint(const b2FrictionJoint* other,
+            const std::unordered_map<b2Body*, b2Body*>& newBodies,
+            const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+            const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges);
 	b2FrictionJoint(const b2FrictionJointDef* def);
 
     virtual size_t Size() const;

@@ -49,6 +49,31 @@ b2MouseJoint::b2MouseJoint(const b2MouseJointDef* def)
 	m_gamma = 0.0f;
 }
 
+b2MouseJoint::b2MouseJoint(const b2MouseJoint* other,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges)
+        : b2Joint(other, newBodies, newJoints, newJointEdges) {
+    m_localAnchorB = other->m_localAnchorB;
+    m_targetA = other->m_targetA;
+    m_frequencyHz = other->m_frequencyHz;
+    m_dampingRatio = other->m_dampingRatio;
+    m_beta = other->m_beta;
+
+    m_impulse = other->m_impulse;
+    m_maxForce = other->m_maxForce;
+    m_gamma = other->m_gamma;
+
+    m_indexA = other->m_indexA;
+    m_indexB = other->m_indexB;
+    m_rB = other->m_rB;
+    m_localCenterB = other->m_localCenterB;
+    m_invMassB = other->m_invMassB;
+    m_invIB = other->m_invIB;
+    m_mass = other->m_mass;
+    m_C = other->m_C;
+}
+
 size_t b2MouseJoint::Size() const {
     return sizeof(b2MouseJoint);
 }
@@ -57,30 +82,7 @@ void b2MouseJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
-    new (target) b2MouseJoint;
-
-    CopyBaseInto(target, newBodies, newJoints, newJointEdges);
-
-    b2MouseJoint* t = (b2MouseJoint*) target;
-
-    t->m_localAnchorB = m_localAnchorB;
-    t->m_targetA = m_targetA;
-    t->m_frequencyHz = m_frequencyHz;
-    t->m_dampingRatio = m_dampingRatio;
-    t->m_beta = m_beta;
-
-    t->m_impulse = m_impulse;
-    t->m_maxForce = m_maxForce;
-    t->m_gamma = m_gamma;
-
-    t->m_indexA = m_indexA;
-    t->m_indexB = m_indexB;
-    t->m_rB = m_rB;
-    t->m_localCenterB = m_localCenterB;
-    t->m_invMassB = m_invMassB;
-    t->m_invIB = m_invIB;
-    t->m_mass = m_mass;
-    t->m_C = m_C;
+    new (target) b2MouseJoint(this, newBodies, newJoints, newJointEdges);
 }
 
 void b2MouseJoint::SetTarget(const b2Vec2& target)

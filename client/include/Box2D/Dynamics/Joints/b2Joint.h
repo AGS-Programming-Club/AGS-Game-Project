@@ -160,7 +160,10 @@ protected:
 	static void Destroy(b2Joint* joint, b2BlockAllocator* allocator);
 
 	b2Joint(const b2JointDef* def);
-	b2Joint() {}
+    b2Joint(const b2Joint* other,
+            const std::unordered_map<b2Body*, b2Body*>& newBodies,
+            const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+            const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges);
 	virtual ~b2Joint() {}
 
 	virtual size_t Size() const = 0;
@@ -168,10 +171,6 @@ protected:
             const std::unordered_map<b2Body*, b2Body*>& newBodies,
             const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
             const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const = 0;
-	void CopyBaseInto(b2Joint* target,
-	        const std::unordered_map<b2Body*, b2Body*>& newBodies,
-	        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
-	        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const;
 
 	virtual void InitVelocityConstraints(const b2SolverData& data) = 0;
 	virtual void SolveVelocityConstraints(const b2SolverData& data) = 0;

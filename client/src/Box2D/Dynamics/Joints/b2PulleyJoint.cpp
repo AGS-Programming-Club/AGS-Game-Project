@@ -70,6 +70,37 @@ b2PulleyJoint::b2PulleyJoint(const b2PulleyJointDef* def)
 	m_impulse = 0.0f;
 }
 
+b2PulleyJoint::b2PulleyJoint(const b2PulleyJoint* other,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges)
+        : b2Joint(other, newBodies, newJoints, newJointEdges) {
+    m_groundAnchorA = other->m_groundAnchorA;
+    m_groundAnchorB = other->m_groundAnchorB;
+    m_lengthA = other->m_lengthA;
+    m_lengthB = other->m_lengthB;
+
+    m_localAnchorA = other->m_localAnchorA;
+    m_localAnchorB = other->m_localAnchorB;
+    m_constant = other->m_constant;
+    m_ratio = other->m_ratio;
+    m_impulse = other->m_impulse;
+
+    m_indexA = other->m_indexA;
+    m_indexB = other->m_indexB;
+    m_uA = other->m_uA;
+    m_uB = other->m_uB;
+    m_rA = other->m_rA;
+    m_rB = other->m_rB;
+    m_localCenterA = other->m_localCenterA;
+    m_localCenterB = other->m_localCenterB;
+    m_invMassA = other->m_invMassA;
+    m_invMassB = other->m_invMassB;
+    m_invIA = other->m_invIA;
+    m_invIB = other->m_invIB;
+    m_mass = other->m_mass;
+}
+
 size_t b2PulleyJoint::Size() const {
     return sizeof(b2PulleyJoint);
 }
@@ -78,36 +109,7 @@ void b2PulleyJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
-    new (target) b2PulleyJoint;
-
-    CopyBaseInto(target, newBodies, newJoints, newJointEdges);
-
-    b2PulleyJoint* t = (b2PulleyJoint*) target;
-
-    t->m_groundAnchorA = m_groundAnchorA;
-    t->m_groundAnchorB = m_groundAnchorB;
-    t->m_lengthA = m_lengthA;
-    t->m_lengthB = m_lengthB;
-
-    t->m_localAnchorA = m_localAnchorA;
-    t->m_localAnchorB = m_localAnchorB;
-    t->m_constant = m_constant;
-    t->m_ratio = m_ratio;
-    t->m_impulse = m_impulse;
-
-    t->m_indexA = m_indexA;
-    t->m_indexB = m_indexB;
-    t->m_uA = m_uA;
-    t->m_uB = m_uB;
-    t->m_rA = m_rA;
-    t->m_rB = m_rB;
-    t->m_localCenterA = m_localCenterA;
-    t->m_localCenterB = m_localCenterB;
-    t->m_invMassA = m_invMassA;
-    t->m_invMassB = m_invMassB;
-    t->m_invIA = m_invIA;
-    t->m_invIB = m_invIB;
-    t->m_mass = m_mass;
+    new (target) b2PulleyJoint(this, newBodies, newJoints, newJointEdges);
 }
 
 void b2PulleyJoint::InitVelocityConstraints(const b2SolverData& data)

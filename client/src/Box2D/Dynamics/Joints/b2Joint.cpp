@@ -205,31 +205,31 @@ b2Joint::b2Joint(const b2JointDef* def)
 	m_edgeB.next = NULL;
 }
 
-void b2Joint::CopyBaseInto(b2Joint* target,
+b2Joint::b2Joint(const b2Joint* other,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
-        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
-    target->m_type = m_type;
-    target->m_prev = (m_prev == NULL) ? NULL : newJoints.at(m_prev);
-    target->m_next = (m_next == NULL) ? NULL : newJoints.at(m_next);
-    target->m_bodyA = (m_bodyA == NULL) ? NULL : newBodies.at(m_bodyA);
-    target->m_bodyB = (m_bodyB == NULL) ? NULL : newBodies.at(m_bodyB);
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) {
+    m_type = other->m_type;
+    m_prev = (other->m_prev == NULL) ? NULL : newJoints.at(other->m_prev);
+    m_next = (other->m_next == NULL) ? NULL : newJoints.at(other->m_next);
+    m_bodyA = (other->m_bodyA == NULL) ? NULL : newBodies.at(other->m_bodyA);
+    m_bodyB = (other->m_bodyB == NULL) ? NULL : newBodies.at(other->m_bodyB);
 
-    target->m_index = m_index;
+    m_index = other->m_index;
 
-    target->m_islandFlag = m_islandFlag;
-    target->m_collideConnected = m_collideConnected;
+    m_islandFlag = other->m_islandFlag;
+    m_collideConnected = other->m_collideConnected;
 
-    target->m_userData = m_userData;
+    m_userData = other->m_userData;
 
-    target->m_edgeA.other = (m_edgeA.other == NULL) ? NULL : newBodies.at(m_edgeA.other);
-    target->m_edgeA.joint = (m_edgeA.joint == NULL) ? NULL : newJoints.at(m_edgeA.joint);
-    target->m_edgeA.prev = (m_edgeA.prev == NULL) ? NULL : newJointEdges.at(m_edgeA.prev);
-    target->m_edgeA.next = (m_edgeA.next == NULL) ? NULL : newJointEdges.at(m_edgeA.next);
-    target->m_edgeB.other = (m_edgeB.other == NULL) ? NULL : newBodies.at(m_edgeB.other);
-    target->m_edgeB.joint = (m_edgeB.joint == NULL) ? NULL : newJoints.at(m_edgeB.joint);
-    target->m_edgeB.prev = (m_edgeB.prev == NULL) ? NULL : newJointEdges.at(m_edgeB.prev);
-    target->m_edgeB.next = (m_edgeB.next == NULL) ? NULL : newJointEdges.at(m_edgeB.next);
+    m_edgeA.other = (other->m_edgeA.other == NULL) ? NULL : newBodies.at(other->m_edgeA.other);
+    m_edgeA.joint = (other->m_edgeA.joint == NULL) ? NULL : newJoints.at(other->m_edgeA.joint);
+    m_edgeA.prev = (other->m_edgeA.prev == NULL) ? NULL : newJointEdges.at(other->m_edgeA.prev);
+    m_edgeA.next = (other->m_edgeA.next == NULL) ? NULL : newJointEdges.at(other->m_edgeA.next);
+    m_edgeB.other = (other->m_edgeB.other == NULL) ? NULL : newBodies.at(other->m_edgeB.other);
+    m_edgeB.joint = (other->m_edgeB.joint == NULL) ? NULL : newJoints.at(other->m_edgeB.joint);
+    m_edgeB.prev = (other->m_edgeB.prev == NULL) ? NULL : newJointEdges.at(other->m_edgeB.prev);
+    m_edgeB.next = (other->m_edgeB.next == NULL) ? NULL : newJointEdges.at(other->m_edgeB.next);
 }
 
 bool b2Joint::IsActive() const

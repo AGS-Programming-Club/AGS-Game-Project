@@ -123,6 +123,44 @@ b2PrismaticJoint::b2PrismaticJoint(const b2PrismaticJointDef* def)
 	m_perp.SetZero();
 }
 
+b2PrismaticJoint::b2PrismaticJoint(const b2PrismaticJoint* other,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges)
+        : b2Joint(other, newBodies, newJoints, newJointEdges) {
+    m_localAnchorA = other->m_localAnchorA;
+    m_localAnchorB = other->m_localAnchorB;
+    m_localXAxisA = other->m_localXAxisA;
+    m_localYAxisA = other->m_localYAxisA;
+    m_referenceAngle = other->m_referenceAngle;
+    m_impulse = other->m_impulse;
+    m_motorImpulse = other->m_motorImpulse;
+    m_lowerTranslation = other->m_lowerTranslation;
+    m_upperTranslation = other->m_upperTranslation;
+    m_maxMotorForce = other->m_maxMotorForce;
+    m_motorSpeed = other->m_motorSpeed;
+    m_enableLimit = other->m_enableLimit;
+    m_enableMotor = other->m_enableMotor;
+    m_limitState = other->m_limitState;
+
+    m_indexA = other->m_indexA;
+    m_indexB = other->m_indexB;
+    m_localCenterA = other->m_localCenterA;
+    m_localCenterB = other->m_localCenterB;
+    m_invMassA = other->m_invMassA;
+    m_invMassB = other->m_invMassB;
+    m_invIA = other->m_invIA;
+    m_invIB = other->m_invIB;
+    m_axis = other->m_axis;
+    m_perp = other->m_perp;
+    m_s1 = other->m_s1;
+    m_s2 = other->m_s2;
+    m_a1 = other->m_a1;
+    m_a2 = other->m_a2;
+    m_K = other->m_K;
+    m_motorMass = other->m_motorMass;
+}
+
 size_t b2PrismaticJoint::Size() const {
     return sizeof(b2PrismaticJoint);
 }
@@ -131,43 +169,7 @@ void b2PrismaticJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
-    new (target) b2PrismaticJoint;
-
-    CopyBaseInto(target, newBodies, newJoints, newJointEdges);
-
-    b2PrismaticJoint* t = (b2PrismaticJoint*) target;
-
-    t->m_localAnchorA = m_localAnchorA;
-    t->m_localAnchorB = m_localAnchorB;
-    t->m_localXAxisA = m_localXAxisA;
-    t->m_localYAxisA = m_localYAxisA;
-    t->m_referenceAngle = m_referenceAngle;
-    t->m_impulse = m_impulse;
-    t->m_motorImpulse = m_motorImpulse;
-    t->m_lowerTranslation = m_lowerTranslation;
-    t->m_upperTranslation = m_upperTranslation;
-    t->m_maxMotorForce = m_maxMotorForce;
-    t->m_motorSpeed = m_motorSpeed;
-    t->m_enableLimit = m_enableLimit;
-    t->m_enableMotor = m_enableMotor;
-    t->m_limitState = m_limitState;
-
-    t->m_indexA = m_indexA;
-    t->m_indexB = m_indexB;
-    t->m_localCenterA = m_localCenterA;
-    t->m_localCenterB = m_localCenterB;
-    t->m_invMassA = m_invMassA;
-    t->m_invMassB = m_invMassB;
-    t->m_invIA = m_invIA;
-    t->m_invIB = m_invIB;
-    t->m_axis = m_axis;
-    t->m_perp = m_perp;
-    t->m_s1 = m_s1;
-    t->m_s2 = m_s2;
-    t->m_a1 = m_a1;
-    t->m_a2 = m_a2;
-    t->m_K = m_K;
-    t->m_motorMass = m_motorMass;
+    new (target) b2PrismaticJoint(this, newBodies, newJoints, newJointEdges);
 }
 
 void b2PrismaticJoint::InitVelocityConstraints(const b2SolverData& data)

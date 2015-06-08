@@ -128,6 +128,61 @@ b2GearJoint::b2GearJoint(const b2GearJointDef* def)
 	m_impulse = 0.0f;
 }
 
+b2GearJoint::b2GearJoint(const b2GearJoint* other,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges)
+        : b2Joint(other, newBodies, newJoints, newJointEdges) {
+    m_joint1 = (other->m_joint1 == NULL) ? NULL : newJoints.at(other->m_joint1);
+    m_joint2 = (other->m_joint2 == NULL) ? NULL : newJoints.at(other->m_joint2);
+
+    m_typeA = other->m_typeA;
+    m_typeB = other->m_typeB;
+
+    m_bodyC = (other->m_bodyC == NULL) ? NULL : newBodies.at(other->m_bodyC);
+    m_bodyD = (other->m_bodyD == NULL) ? NULL : newBodies.at(other->m_bodyD);
+
+    m_localAnchorA = other->m_localAnchorA;
+    m_localAnchorB = other->m_localAnchorB;
+    m_localAnchorC = other->m_localAnchorC;
+    m_localAnchorD = other->m_localAnchorD;
+
+    m_localAxisC = other->m_localAxisC;
+    m_localAxisD = other->m_localAxisD;
+
+    m_referenceAngleA = other->m_referenceAngleA;
+    m_referenceAngleB = other->m_referenceAngleB;
+
+    m_constant = other->m_constant;
+    m_ratio = other->m_ratio;
+
+    m_impulse = other->m_impulse;
+
+    m_indexA = other->m_indexA;
+    m_indexB = other->m_indexB;
+    m_indexC = other->m_indexC;
+    m_indexD = other->m_indexD;
+    m_lcA = other->m_lcA;
+    m_lcB = other->m_lcB;
+    m_lcC = other->m_lcC;
+    m_lcD = other->m_lcD;
+    m_mA = other->m_mA;
+    m_mB = other->m_mB;
+    m_mC = other->m_mC;
+    m_mD = other->m_mD;
+    m_iA = other->m_iA;
+    m_iB = other->m_iB;
+    m_iC = other->m_iC;
+    m_iD = other->m_iD;
+    m_JvAC = other->m_JvAC;
+    m_JvBD = other->m_JvBD;
+    m_JwA = other->m_JwA;
+    m_JwB = other->m_JwB;
+    m_JwC = other->m_JwC;
+    m_JwD = other->m_JwD;
+    m_mass = other->m_mass;
+}
+
 size_t b2GearJoint::Size() const {
     return sizeof(b2GearJoint);
 }
@@ -136,60 +191,7 @@ void b2GearJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
-    new (target) b2GearJoint;
-
-    CopyBaseInto(target, newBodies, newJoints, newJointEdges);
-
-    b2GearJoint* t = (b2GearJoint*) target;
-
-    t->m_joint1 = (m_joint1 == NULL) ? NULL : newJoints.at(m_joint1);
-    t->m_joint2 = (m_joint2 == NULL) ? NULL : newJoints.at(m_joint2);
-
-    t->m_typeA = m_typeA;
-    t->m_typeB = m_typeB;
-
-    t->m_bodyC = (m_bodyC == NULL) ? NULL : newBodies.at(m_bodyC);
-    t->m_bodyD = (m_bodyD == NULL) ? NULL : newBodies.at(m_bodyD);
-
-    t->m_localAnchorA = m_localAnchorA;
-    t->m_localAnchorB = m_localAnchorB;
-    t->m_localAnchorC = m_localAnchorC;
-    t->m_localAnchorD = m_localAnchorD;
-
-    t->m_localAxisC = m_localAxisC;
-    t->m_localAxisD = m_localAxisD;
-
-    t->m_referenceAngleA = m_referenceAngleA;
-    t->m_referenceAngleB = m_referenceAngleB;
-
-    t->m_constant = m_constant;
-    t->m_ratio = m_ratio;
-
-    t->m_impulse = m_impulse;
-
-    t->m_indexA = m_indexA;
-    t->m_indexB = m_indexB;
-    t->m_indexC = m_indexC;
-    t->m_indexD = m_indexD;
-    t->m_lcA = m_lcA;
-    t->m_lcB = m_lcB;
-    t->m_lcC = m_lcC;
-    t->m_lcD = m_lcD;
-    t->m_mA = m_mA;
-    t->m_mB = m_mB;
-    t->m_mC = m_mC;
-    t->m_mD = m_mD;
-    t->m_iA = m_iA;
-    t->m_iB = m_iB;
-    t->m_iC = m_iC;
-    t->m_iD = m_iD;
-    t->m_JvAC = m_JvAC;
-    t->m_JvBD = m_JvBD;
-    t->m_JwA = m_JwA;
-    t->m_JwB = m_JwB;
-    t->m_JwC = m_JwC;
-    t->m_JwD = m_JwD;
-    t->m_mass = m_mass;
+    new (target) b2GearJoint(this, newBodies, newJoints, newJointEdges);
 }
 
 void b2GearJoint::InitVelocityConstraints(const b2SolverData& data)

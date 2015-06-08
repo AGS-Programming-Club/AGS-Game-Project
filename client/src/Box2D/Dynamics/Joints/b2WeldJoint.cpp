@@ -55,6 +55,34 @@ b2WeldJoint::b2WeldJoint(const b2WeldJointDef* def)
 	m_impulse.SetZero();
 }
 
+b2WeldJoint::b2WeldJoint(const b2WeldJoint* other,
+        const std::unordered_map<b2Body*, b2Body*>& newBodies,
+        const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
+        const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges)
+        : b2Joint(other, newBodies, newJoints, newJointEdges) {
+    m_frequencyHz = other->m_frequencyHz;
+    m_dampingRatio = other->m_dampingRatio;
+    m_bias = other->m_bias;
+
+    m_localAnchorA = other->m_localAnchorA;
+    m_localAnchorB = other->m_localAnchorB;
+    m_referenceAngle = other->m_referenceAngle;
+    m_gamma = other->m_gamma;
+    m_impulse = other->m_impulse;
+
+    m_indexA = other->m_indexA;
+    m_indexB = other->m_indexB;
+    m_rA = other->m_rA;
+    m_rB = other->m_rB;
+    m_localCenterA = other->m_localCenterA;
+    m_localCenterB = other->m_localCenterB;
+    m_invMassA = other->m_invMassA;
+    m_invMassB = other->m_invMassB;
+    m_invIA = other->m_invIA;
+    m_invIB = other->m_invIB;
+    m_mass = other->m_mass;
+}
+
 size_t b2WeldJoint::Size() const {
     return sizeof(b2WeldJoint);
 }
@@ -63,33 +91,7 @@ void b2WeldJoint::CopyConstructInto(b2Joint* target,
         const std::unordered_map<b2Body*, b2Body*>& newBodies,
         const std::unordered_map<b2Joint*, b2Joint*>& newJoints,
         const std::unordered_map<b2JointEdge*, b2JointEdge*>& newJointEdges) const {
-    new (target) b2WeldJoint;
-
-    CopyBaseInto(target, newBodies, newJoints, newJointEdges);
-
-    b2WeldJoint* t = (b2WeldJoint*) target;
-
-    t->m_frequencyHz = m_frequencyHz;
-    t->m_dampingRatio = m_dampingRatio;
-    t->m_bias = m_bias;
-
-    t->m_localAnchorA = m_localAnchorA;
-    t->m_localAnchorB = m_localAnchorB;
-    t->m_referenceAngle = m_referenceAngle;
-    t->m_gamma = m_gamma;
-    t->m_impulse = m_impulse;
-
-    t->m_indexA = m_indexA;
-    t->m_indexB = m_indexB;
-    t->m_rA = m_rA;
-    t->m_rB = m_rB;
-    t->m_localCenterA = m_localCenterA;
-    t->m_localCenterB = m_localCenterB;
-    t->m_invMassA = m_invMassA;
-    t->m_invMassB = m_invMassB;
-    t->m_invIA = m_invIA;
-    t->m_invIB = m_invIB;
-    t->m_mass = m_mass;
+    new (target) b2WeldJoint(this, newBodies, newJoints, newJointEdges);
 }
 
 void b2WeldJoint::InitVelocityConstraints(const b2SolverData& data)
