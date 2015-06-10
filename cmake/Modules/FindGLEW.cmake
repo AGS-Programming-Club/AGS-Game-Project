@@ -7,7 +7,7 @@
 
 
 
-set (GLEW_ROOT_DIR "${PROJECT_SOURCE_DIR}/external/glew")
+set (GLEW_ROOT_DIR "${PROJECT_SOURCE_DIR}/external/glew-1.12.0")
 
 add_subdirectory (${GLEW_ROOT_DIR} glew EXCLUDE_FROM_ALL)
 

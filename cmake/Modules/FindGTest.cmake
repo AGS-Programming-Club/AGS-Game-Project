@@ -7,7 +7,7 @@
 
 
 
-set (GTEST_ROOT_DIR "${PROJECT_SOURCE_DIR}/external/gtest")
+set (GTEST_ROOT_DIR "${PROJECT_SOURCE_DIR}/external/gtest-1.7.0")
 
 add_subdirectory (${GTEST_ROOT_DIR} gtest EXCLUDE_FROM_ALL)
 

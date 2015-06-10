@@ -7,7 +7,7 @@
 
 
 
-set (GLFW_ROOT_DIR "${PROJECT_SOURCE_DIR}/external/glfw")
+set (GLFW_ROOT_DIR "${PROJECT_SOURCE_DIR}/external/glfw-3.1.1")
 
 add_subdirectory (${GLFW_ROOT_DIR} glfw EXCLUDE_FROM_ALL)
 

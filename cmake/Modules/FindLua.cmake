@@ -7,7 +7,7 @@
 
 
 
-set (LUA_ROOT_DIR "${PROJECT_SOURCE_DIR}/external/lua")
+set (LUA_ROOT_DIR "${PROJECT_SOURCE_DIR}/external/lua-5.3.0")
 
 add_subdirectory (${LUA_ROOT_DIR} lua EXCLUDE_FROM_ALL)
 
