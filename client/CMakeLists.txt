@@ -1,4 +1,4 @@
-set (client_LIBRARIES ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${GLFW_LIBRARIES})
+set (client_LIBRARIES ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${GLFW_LIBRARIES} ${LUA_LIBRARIES})
 
 # Hack around ${OPENGL_INCLUDE_DIR} being empty under Windows
 if (NOT "${OPENGL_INCLUDE_DIR}" STREQUAL "")
@@ -7,6 +7,7 @@ endif (NOT "${OPENGL_INCLUDE_DIR}" STREQUAL "")
 include_directories ("${GLEW_INCLUDE_DIRS}")
 include_directories ("${GLFW_INCLUDE_DIRS}")
 include_directories ("${GLM_INCLUDE_DIRS}")
+include_directories ("${LUA_INCLUDE_DIRS}")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/client")
 
