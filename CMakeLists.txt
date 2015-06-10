@@ -40,7 +40,6 @@ find_package (GLEW REQUIRED)
 find_package (GLFW REQUIRED)
 find_package (GLM REQUIRED)
 find_package (Lua REQUIRED)
-#find_package (FreeImage REQUIRED)
 if (BUILD_UNIT_TESTS)
     find_package (GTest REQUIRED)
     find_package (LibRT) # For liquidfun unit tests on Linux
