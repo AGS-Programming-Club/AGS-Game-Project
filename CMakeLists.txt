@@ -24,7 +24,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions (-DDEBUG=1)
 endif ()
 
-option(BUILD_UNIT_TESTS "Build Unit Tests." OFF)
+option (BUILD_UNIT_TESTS "Build Unit Tests." OFF)
 if (BUILD_UNIT_TESTS)
     enable_testing()
 endif ()
