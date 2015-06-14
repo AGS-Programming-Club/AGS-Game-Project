@@ -52,8 +52,12 @@ CTestTestfile.cmake
 /CMakeCache.txt
 /config.h
 /test/
-/gtest/
 /Testing/
+
+/gtest/
+/glew/
+/glfw/
+/lua/
 
 # Eclipse folders and files
 /.settings/
