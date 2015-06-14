@@ -54,6 +54,7 @@ CTestTestfile.cmake
 /test/
 /Testing/
 
+/lib/
 /gtest/
 /glew/
 /glfw/
