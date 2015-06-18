@@ -45,4 +45,6 @@ if (BUILD_UNIT_TESTS)
     find_package (LibRT) # For liquidfun unit tests on Linux
 endif ()
 
+add_definitions (-DGLEW_STATIC)
+
 add_subdirectory (client)
