@@ -22,8 +22,11 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 # All platforms need OpenGL
 #
 
-include(FindPkgConfig)
-pkg_check_modules( OpenGL REQUIRED gl )
+# Windows does not have pkg-config
+#include(FindPkgConfig)
+#pkg_check_modules( OpenGL REQUIRED gl )
+find_package(OpenGL REQUIRED)
+set(OpenGl_LDFLAGS ${OPENGL_LIBRARIES})
 
 #
 # Linux needs X11
