@@ -12,6 +12,10 @@ set (CMAKE_CXX_STANDARD 11)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_CXX_EXTENSIONS OFF)
 
+if (BUILD_SHARED_LIBS)
+    message (FATAL_ERROR "BUILD_SHARED_LIBS must be OFF")
+endif ()
+
 if (NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "Release"))
     set (CMAKE_BUILD_TYPE "Debug" CACHE STRING "Options are: Debug Release" FORCE)
 endif ()
@@ -20,7 +24,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions (-DDEBUG=1)
 endif ()
 
-option(BUILD_UNIT_TESTS "Build Unit Tests." OFF)
+option (BUILD_UNIT_TESTS "Build Unit Tests." OFF)
 if (BUILD_UNIT_TESTS)
     enable_testing()
 endif ()
@@ -35,8 +39,12 @@ find_package (OpenGL REQUIRED)
 find_package (GLEW REQUIRED)
 find_package (GLFW REQUIRED)
 find_package (GLM REQUIRED)
-#find_package (FreeImage REQUIRED)
-find_package (GTest REQUIRED)
-find_package (LibRT) # For liquidfun unit tests on Linux
+find_package (Lua REQUIRED)
+if (BUILD_UNIT_TESTS)
+    find_package (GTest REQUIRED)
+    find_package (LibRT) # For liquidfun unit tests on Linux
+endif ()
+
+add_definitions (-DGLEW_STATIC)
 
 add_subdirectory (client)

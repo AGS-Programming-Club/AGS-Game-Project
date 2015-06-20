@@ -1,4 +1,4 @@
-# FindGTEST
+# FindGTest
 # --------
 # Defines:
 # GTEST_FOUND - true if GTEST has been found and can be used
@@ -7,9 +7,9 @@
 
 
 
-set (GTEST_ROOT_DIR "${PROJECT_SOURCE_DIR}/external/gtest")
+set (GTEST_ROOT_DIR "${PROJECT_SOURCE_DIR}/external/gtest-1.7.0")
 
-add_subdirectory (${GTEST_ROOT_DIR} gtest)
+add_subdirectory (${GTEST_ROOT_DIR} gtest EXCLUDE_FROM_ALL)
 
 set (GTEST_FOUND true)
 set (GTEST_INCLUDE_DIRS "${GTEST_ROOT_DIR}/include")

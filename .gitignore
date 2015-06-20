@@ -52,8 +52,13 @@ CTestTestfile.cmake
 /CMakeCache.txt
 /config.h
 /test/
-/gtest/
 /Testing/
+
+/lib/
+/gtest/
+/glew/
+/glfw/
+/lua/
 
 # Eclipse folders and files
 /.settings/
@@ -62,6 +67,9 @@ CTestTestfile.cmake
 
 # Doxygen
 /doc
+
+# External Makefile
+!/external/**/Makefile
 
 # =========================
 # Operating System Files

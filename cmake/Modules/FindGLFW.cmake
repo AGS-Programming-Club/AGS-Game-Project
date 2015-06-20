@@ -7,43 +7,10 @@
 
 
 
-unset (GLFW_INCLUDE_SEARCH_DIRS)
-unset (GLFW_LIBRARY_SEARCH_DIRS)
+set (GLFW_ROOT_DIR "${PROJECT_SOURCE_DIR}/external/glfw-3.1.1")
 
-if (WIN32)
-    set (GLFW_ROOT_PATH "${PROJECT_SOURCE_DIR}/external/glfw")
+add_subdirectory (${GLFW_ROOT_DIR} glfw EXCLUDE_FROM_ALL)
 
-    if (MINGW)
-        set (GLFW_LIBRARY_PREFIX "${GLFW_ROOT_PATH}/lib-mingw")
-    else (MINGW)
-        set (FATAL_ERROR "Unsupported compiler!")
-    endif (MINGW)
-
-    set (GLFW_INCLUDE_SEARCH_DIRS "${GLFW_ROOT_PATH}/include")
-
-    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        # 64 bit system
-        set (GLFW_LIBRARY_SEARCH_DIRS "${GLFW_LIBRARY_PREFIX}/x64")
-    else (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        # 32 bit system
-        set (GLFW_LIBRARY_SEARCH_DIRS "${GLFW_LIBRARY_PREFIX}/x86")
-    endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
-endif (WIN32)
-
-find_path (GLFW_INCLUDE_DIR
-    NAMES GLFW/glfw3.h
-    HINTS ${GLFW_INCLUDE_SEARCH_DIRS})
-
-find_library (GLFW_LIBRARY
-    NAMES glfw glfw3
-    HINTS ${GLFW_LIBRARY_SEARCH_DIRS}
-    PATH_SUFFIXES lib64)
-
-set (GLFW_INCLUDE_DIRS ${GLFW_INCLUDE_DIR})
-set (GLFW_LIBRARIES ${GLFW_LIBRARY})
-
-include ("${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake")
-find_package_handle_standard_args (GLFW
-                                   REQUIRED_VARS GLFW_INCLUDE_DIR GLFW_LIBRARY)
-
-mark_as_advanced(GLFW_INCLUDE_DIR GLFW_LIBRARY)
+set (GLFW_FOUND true)
+set (GLFW_INCLUDE_DIRS "${GLFW_ROOT_DIR}/include")
+set (GLFW_LIBRARIES glfw ${GLFW_LIBRARIES})
